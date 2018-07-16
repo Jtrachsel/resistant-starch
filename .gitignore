@@ -34,3 +34,4 @@ vignettes/*.pdf
 
 # figures and other stuff I want to ignore
 /ignore/
+.Rproj.user

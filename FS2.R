@@ -4,7 +4,6 @@ ptm <- proc.time()
 
 set.seed(357)
 
-library(lubridate)
 library(vegan)
 library(tidyverse)
 library(ggrepel)
@@ -143,7 +142,7 @@ FecalTime.meta$shannon <- diversity(FecalTime, index = 'shannon')
 # SUPPLEMENT
 p.fectime.alpha.16S <- filter(FecalTime.meta, day %in% c(0,12,15,19,21)) %>%
   ggplot() + geom_boxplot(aes(day, invsimpson, fill = treatment)) +
-  scale_fill_brewer(palette = 'Dark2') + ggtitle('Alpha diversity of feces over time') +
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ggtitle('Alpha diversity of feces over time') +
   annotate('segment', x=4.7, xend=5.2, y=30, yend=30, size=.3) + annotate('text', x=4.9, y=31, label='* p=0.029', size=4)
 
 p.fectime.alpha.16S
@@ -172,7 +171,7 @@ tissue_alpha_wilcox_results <- Tissue21.meta %>% group_by(tissue) %>%
 # use this figure for alpha diversity of tissues
 # supplement
 p.tissue.alpha.16S <- ggplot(Tissue21.meta) + geom_boxplot(aes(tissue, invsimpson, fill = treatment)) +
-  scale_fill_brewer(palette = 'Dark2') +
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) +
   ggtitle('Alpha diversity of tissues') + annotate('text', x=4, y=36.5, label= '* p = 0.022 *')+
   annotate('segment', x=3.8, xend=4.2, y=35, yend=35)
 
@@ -236,7 +235,7 @@ sigtab.D12$Treatment <- ifelse(sigtab.D12$log2FoldChange >=0, "RPS", "Control")
 
 deseq.D12 <- ggplot(sigtab.D12, aes(x=reorder(rownames(sigtab.D12), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
   geom_bar(stat='identity') + geom_text(aes(x=rownames(sigtab.D12), y=log2FoldChange+.6, label = paste(Family, Genus, sep = ' ')), size=3)+ labs(x="Genus")+
-  scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
                                              axis.title.x=element_text(size = 10),
                                              axis.title.y=element_text(size = 10))+ ggtitle('Differentially abundant genera: feces')+ coord_flip()
@@ -276,7 +275,7 @@ sigtab.D19$Treatment <- ifelse(sigtab.D19$log2FoldChange >=0, "RPS", "Control")
 
 deseq.D19 <- ggplot(sigtab.D19, aes(x=reorder(rownames(sigtab.D19), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
   geom_bar(stat='identity') + geom_text(aes(x=rownames(sigtab.D19), y=0, label = paste(Family, Genus, sep = ' ')), size=3)+ labs(x="Genus")+
-  scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_blank(),
                                              axis.title.x=element_text(size = 10),
                                              axis.title.y=element_blank(),
@@ -309,7 +308,7 @@ sigtab.D21 <- sigtab.D21[order(sigtab.D21$log2FoldChange),]
 respire.feces.d21 <- sort(c(grep('Camp', sigtab.D21$Genus),
   grep('Sutt', sigtab.D21$Genus),
   grep('Strep', sigtab.D21$Genus),
-  grep('Trep', sigtab.D21$Genus),
+  #grep('Trep', sigtab.D21$Genus),
   grep('Helic', sigtab.D21$Genus),
   grep('Muci', sigtab.D21$Genus)))
 
@@ -325,7 +324,7 @@ sigtab.D21$Genus[respire.feces.d21] <- ''
 
 p.deseq.D21.feces <- ggplot(sigtab.D21, aes(x=reorder(rownames(sigtab.D21), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
   geom_bar(stat='identity') + geom_text(aes(y=0, label = paste(Family, Genus, sep = ' ')),fontface='italic', size=3)+ labs(x="Genus")+
-  scale_fill_brewer(palette="Dark2") + geom_text(data=resp.anno, aes(x=x, y=0, label=lab), fontface='bold.italic', size=4)+
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + geom_text(data=resp.anno, aes(x=x, y=0, label=lab), fontface='bold.italic', size=4)+
   theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_blank(),
                                              axis.title.x=element_text(size = 10),
@@ -371,7 +370,7 @@ sigtab.ileum <- sigtab.ileum[order(sigtab.ileum$log2FoldChange),]
 respire.feces.d21 <- sort(c(grep('Camp', sigtab.ileum$Genus),
                             grep('Sutt', sigtab.ileum$Genus),
                             grep('Strep', sigtab.ileum$Genus),
-                            grep('Trep', sigtab.ileum$Genus),
+                            #grep('Trep', sigtab.ileum$Genus),
                             grep('Helic', sigtab.ileum$Genus),
                             grep('Muci', sigtab.ileum$Genus)))
 
@@ -389,7 +388,7 @@ sigtab.ileum$Genus[respire.feces.d21] <- ''
 
 p.deseq.ileum <- ggplot(sigtab.ileum, aes(x=reorder(rownames(sigtab.ileum), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
   geom_bar(stat='identity', show.legend = FALSE) + geom_text(aes(x=rownames(sigtab.ileum), y=0, label = paste(Family, Genus, sep = ' ')), fontface='italic', size=3)+ labs(x="Genus")+
-  scale_fill_brewer(palette="Dark2") + geom_text(data=resp.anno, aes(x=x, y=0, label=lab), fontface='bold.italic', size=4)+
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + geom_text(data=resp.anno, aes(x=x, y=0, label=lab), fontface='bold.italic', size=4)+
   theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_blank(),
                                              axis.title.x=element_text(size = 10),
@@ -411,7 +410,7 @@ sigtab.cecum <- sigtab.cecum[order(sigtab.cecum$log2FoldChange),]
 respire.feces.d21 <- sort(c(grep('Camp', sigtab.cecum$Genus),
                             grep('Sutt', sigtab.cecum$Genus),
                             grep('Strep', sigtab.cecum$Genus),
-                            grep('Trep', sigtab.cecum$Genus),
+                            #grep('Trep', sigtab.cecum$Genus),
                             grep('Helic', sigtab.cecum$Genus),
                             grep('Muci', sigtab.cecum$Genus)))
 
@@ -430,7 +429,7 @@ sigtab.cecum$Genus[respire.feces.d21] <- ''
 
 p.deseq.cecum <- ggplot(sigtab.cecum, aes(x=reorder(rownames(sigtab.cecum), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
   geom_bar(stat='identity', show.legend = FALSE) + geom_text(aes(x=rownames(sigtab.cecum), y=0, label = paste(Family, Genus, sep = ' ')),fontface='italic', size=3)+ labs(x="Genus")+
-  scale_fill_brewer(palette="Dark2") + geom_text(data=resp.anno, aes(x=x, y=0, label=lab), fontface='bold.italic', size=4)+
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + geom_text(data=resp.anno, aes(x=x, y=0, label=lab), fontface='bold.italic', size=4)+
   theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_blank(),
                                              axis.title.x=element_text(size = 10),
@@ -451,7 +450,7 @@ sigtab.colon <- sigtab.colon[order(sigtab.colon$log2FoldChange),]
 respire.feces.d21 <- sort(c(grep('Camp', sigtab.colon$Genus),
                             grep('Sutt', sigtab.colon$Genus),
                             grep('Strep', sigtab.colon$Genus),
-                            grep('Trep', sigtab.colon$Genus),
+                            #grep('Trep', sigtab.colon$Genus),
                             grep('Helic', sigtab.colon$Genus),
                             grep('Muci', sigtab.colon$Genus)))
 
@@ -469,7 +468,7 @@ sigtab.colon$Genus[respire.feces.d21] <- ''
 
 p.deseq.colon <- ggplot(sigtab.colon, aes(x=reorder(rownames(sigtab.colon), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
   geom_bar(stat='identity', show.legend = FALSE) + geom_text(aes(x=rownames(sigtab.colon), y=0, label = paste(Family, Genus, sep = ' ')), fontface='italic', size=3)+ labs(x="Genus")+
-  scale_fill_brewer(palette="Dark2") + geom_text(data=resp.anno, aes(x=x, y=0, label=lab), fontface='bold.italic', size=4)+
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + geom_text(data=resp.anno, aes(x=x, y=0, label=lab), fontface='bold.italic', size=4)+
   theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_blank(),
                                              axis.title.x=element_text(size = 10),
@@ -487,7 +486,7 @@ sigtab.cec_cont_RNA$Treatment <- ifelse(sigtab.cec_cont_RNA$log2FoldChange >=0, 
 
 p.deseq.cec_cont_RNA <- ggplot(sigtab.cec_cont_RNA, aes(x=reorder(rownames(sigtab.cec_cont_RNA), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
   geom_bar(stat='identity', show.legend = FALSE) + geom_text(aes(x=rownames(sigtab.cec_cont_RNA), y=0, label = Genus), size=3)+ labs(x="Genus")+
-  scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_text(color = 'black', size=12),
                                              axis.title.x=element_text(size = 10),
                                              axis.title.y=element_text(size = 10))+ ggtitle('Differentially abundant genera: cecal contents (RNA)')+ coord_flip()
@@ -684,7 +683,7 @@ dif_ab_16S <- rbind(otu.sigtab.D12,
 ############ COMMENTED HERE #################
 #dif_ab_16S$name <- swap[dif_ab_16S$otu]
 #dif_ab_16S <- dif_ab_16S[,c(1:14,17,15,16)]
-#write.table(dif_ab_16S, 'dif_ab_16s.txt', row.names = TRUE, quote = FALSE, col.names = TRUE, sep = '\t')
+write.table(dif_ab_16S, './data/dif_ab_16s.txt', row.names = TRUE, quote = FALSE, col.names = TRUE, sep = '\t')
 
 # end OTU level stuff  #
 # Below here everything is rarrefied to 4200 sequences #
@@ -724,13 +723,13 @@ p.otu87.tiss <- tiss %>% filter(otu == 'Otu00087' & day ==21) %>%
   ggplot(aes(x=tissue, y=value))  +
   geom_boxplot(aes(x=tissue, y=value, group=design, fill=treatment), show.legend = TRUE) +
   #ggtitle('Relative proportion of OTU87 in each tissue a Day 21') +
-  scale_fill_brewer(palette = 'Dark2') + ylab('proportion of total community')
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ylab('proportion of total community')
 
 p.otu87.fec <- timepo2 %>% filter(otu %in% levels(timepo2$otu2)[c(85)]) %>%
   ggplot(aes(x=day, y=value))  +
   #geom_vline(xintercept = 12, colour='black')+
   geom_boxplot(aes(x=day, y=value, group=design, fill=treatment), show.legend = FALSE) +# ggtitle('Relative proportion of OTU87 in feces over time')
-  scale_fill_brewer(palette = 'Dark2')+ ylab('proportion of total community')
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS'))+ ylab('proportion of total community')
 
 
 ###
@@ -745,6 +744,7 @@ FS2.bray2 <- vegdist(FS2.4200, method = 'bray')
 
 dispers <- betadisper(FS2.bray2, group = meta$design)
 pdispers <- permutest(dispers, pairwise = TRUE, permutations = 1000)
+
 dispersion_supp_16S <- as.data.frame(pdispers$pairwise$permuted)
 dispersion_supp_16S$comp <- rownames(dispersion_supp_16S)
 
@@ -762,26 +762,36 @@ dispersdf$group <- rownames(dispersdf)
 meta$group == dispersdf$group
 metadisp <- merge(meta, dispersdf, by = 'group')
 
-dispgroups <- summarise(group_by(metadisp, design), average_dist=mean(dispers.distances))
+dispgroups <- summarise(group_by(metadisp, design), average_dist=mean(dispers.distances), sd_dist=sd(dispers.distances), se_dist=sd_dist/sqrt(n()))
 
 dispgroups <- unique(inner_join(dispgroups, meta[,-c(1,2,5,7,9)]))
 
-metadisp %>% filter(tissue == 'feces' & day %in% c(0:22)) %>%
+dispgroups %>% filter(tissue == 'feces' & day %in% c(0:22)) %>%
   ggplot(aes(x=day, y=dispers.distances, fill = treatment, group = design)) +
-  geom_boxplot() + scale_fill_brewer(palette = 'Dark2') + ylim(c(.15,.7)) +
+  geom_boxplot() + scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ylim(c(.15,.7)) +
   ylab("distance to the group median") + ggtitle("Fecal beta diversity dispersion over time")
 
-# maybe this is useful?  polish a little bit
+
+
+
+
+metadisp %>% filter(tissue == 'feces' & day %in% c(0:22)) %>%
+  ggplot(aes(x=day, y=dispers.distances, fill = treatment, group = design)) +
+  geom_boxplot() + scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ylim(c(.15,.7)) +
+  ylab("distance to the group median") + ggtitle("Fecal beta diversity dispersion over time")
+
 
 fecaldisptime <-  dispgroups %>% filter(tissue == 'feces' & day < 22)
 
 p.16s.disp.time <- ggplot(fecaldisptime, aes(x=day, y=average_dist, color = treatment)) +
-  geom_vline(xintercept = 12, color='purple', size=1)+ geom_point(size = 2.5) +  geom_line(show.legend = FALSE) + ylim(c(.2,.5))+ xlim(c(0,22))+
+  geom_vline(xintercept = 12, color='purple', size=.75, alpha=.7)+ geom_point(size = 2.5) +  geom_line(show.legend = FALSE) + ylim(c(.2,.5))+ xlim(c(0,22))+
   #ggtitle('Community Variability (Dispersion)',
   #       subtitle = "Vegan's betadisper(): how much variability is there in a group's community structure?") +
-  ylab("Avg dist to group mean") + scale_color_brewer(palette = "Dark2") +
-  annotate(geom = 'text', x=21, y=.4, label='* p=0.001 *')
+  ylab("Avg dist to group mean") + scale_color_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + 
+  geom_errorbar(aes(ymin=average_dist-se_dist, ymax=average_dist+se_dist), width=0.2, size=1)+
+  annotate(geom = 'text', x=21, y=.45, label='* p=0.001 *')
 p.16s.disp.time
+
 #############FIG 2 16S DISPER #############
 # I think I should include this  figure in the supplement
 
@@ -792,7 +802,16 @@ rownames(meta) == rownames(FS2.4200)
 
 
 
-FS2.ord <- NMDS_ellipse(metadata = meta, OTU_table = FS2.4200, grouping_set = 'design', MDS_trymax = 1000)
+FS2.ord <- NMDS_ellipse(metadata = meta,
+                        OTU_table = FS2.4200,
+                        grouping_set = 'design',
+                        MDS_trymax = 1000, 
+                        autotransform = FALSE)
+
+FS2.ord[[3]]$species
+stressplot(FS2.ord[[3]])
+
+
 
 
 FS2.metanmds <- FS2.ord[[1]]
@@ -808,40 +827,7 @@ df_ell$day <-gsub('FS2_(.*)_([0-9]+)_.*', '\\2', df_ell$group)
 df_ell$treatmentXday <- paste(df_ell$treatment, df_ell$day, sep = ' ')
 FS2.metanmds$day <- factor(FS2.metanmds$day)
 
-# # figure 1B
-# p.weaning.ord <- ggplot(data=subset(FS2.metanmds, tissue == 'feces' & day %in% c(0,21)), aes(x=MDS1, y = MDS2)) +
-#   geom_point(aes(color=treatment, shape=day), size=2.7, alpha = .75) +
-#   geom_segment(aes(x=MDS1, y=MDS2, xend=centroidX, yend=centroidY, color=treatment), size = .3) +
-#   geom_path(data = subset(df_ell, day %in% c(0, 21) & tissue == 'feces'), aes(x=NMDS1, y=NMDS2, group=treatmentXday, color=treatment), size=1) +
-#   ggtitle('Feces community similarity', subtitle = 'Day 0 vs Day 21 within group\nPERMANOVA: control: F=10.8, p=0.0001; RPS: F=11.5, p=0.0001') +
-#   scale_color_brewer(palette = 'Dark2') + labs(caption = 'Ordination stress = 0.165')
-# 
-# p.weaning.ord
-
-# adonis stats info for D0 vs D21 for each group.  Do I need to lump?
-
-# FS2_feces_0_control vs FS2_feces_21_control 10.7868015 0.30141843 0.0001000     0.0435
-# FS2_feces_21_control vs FS2_feces_0_RPS 11.5118295 0.31529040 0.0001000     0.0435
-
-
-
-
-
-#  THESE COLUMN INDICIES ARE WRONG, CAN PROB DELETE ALL THIS BUT LEAVING FOR NOW
-# groupxday <- unique(FS2.metanmds[,c(4,5,12:14)]) # this little dataframe is needed for annotations that dont look bad.
-# groupxday <- filter(groupxday, day %in% c(0:22) & tissue == 'feces')
-# 
-# 
-# p.16s.ord.time <- FS2.metanmds %>% filter(tissue == 'feces' & day %in% c(0:21)) %>% ggplot(aes(x=centroidX, y=centroidY)) +
-#   geom_path(aes(group=treatment, color=treatment), size = 2, alpha=.7) +
-#   geom_point(aes(color=treatment), size=7) +
-#   geom_text(data=groupxday, aes(x=centro, y=groupY, label=day))+
-#   scale_color_brewer(palette = 'Dark2')  +
-#   ggtitle('Fecal community structure over time', subtitle = 'Treatment group centroids') + ylab('NMDS2') + xlab('NMDS1')
-# 
-# p.16s.ord.time
-#############FIGURE 2 ############
-# the above one is nice for showing progression over time maybe
+########## 16S TIS ORD #######
 
 groupxtiss <- FS2.metanmds %>% filter(day == 21) %>% select(tissue, day, treatment, centroidX, centroidY) %>% unique() 
 
@@ -849,7 +835,7 @@ p.tissord <- groupxtiss %>% ggplot(aes(x=centroidX, y=centroidY)) +
   geom_point(aes(color=treatment), size=8, show.legend = FALSE) +
   geom_path(data = subset(df_ell, day == 21), aes(x=NMDS1, y=NMDS2, group=group, color=treatment), size=1, show.legend = FALSE) +
   geom_text(data=groupxtiss, aes(x=centroidX, y=centroidY, label=tissue), show.legend = FALSE)+
-  scale_color_brewer(palette = 'Dark2') + labs(x='NMDS 1', y= 'NMDS 2', caption = '16S, Ordination stress: 0.16')# + 
+  scale_color_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + labs(x='NMDS 1', y= 'NMDS 2')# + 
   #geom_point(data = filter(FS2.metanmds, day == 21), aes(x=MDS1, y=MDS2, color=treatment), alpha=.3)#+
 #ggtitle('Bray-curtis based NMDS ordination of tissues at day 21')
 p.tissord
@@ -947,7 +933,7 @@ goodphy <- levels(FS2.phylum.relabund$variable)[c(1:8,13)]
 #figure 1A
 p.weaning.phyla <- filter(FS2.phylum.relabund, tissue == 'feces' & day %in% c(0,21) & variable %in% goodphy) %>%
   ggplot(aes(x=day, y=value, fill=treatment))+ geom_boxplot(aes(group=design), show.legend = FALSE) +
-  scale_fill_brewer(palette = 'Dark2') + expand_limits(y=0) +
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + expand_limits(y=0) +
   facet_wrap(~variable, shrink = TRUE, scales = 'free') +
   ggtitle('Weaning effects on major phyla in fecal microbiota') +
   ylab('proportion of total community')
@@ -958,7 +944,7 @@ D21phy <- levels(FS2.phylum.relabund$variable)[c(1,2,3,4,5,7,8,10,12)]
 
 p.fecesphyla.D21 <- filter(FS2.phylum.relabund, tissue == 'feces' & day == 21 & variable %in% D21phy) %>%
   ggplot(aes(x=treatment, y=value, fill=treatment)) +
-  geom_boxplot()+ scale_fill_brewer(palette = 'Dark2') +
+  geom_boxplot()+ scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) +
   facet_wrap(~variable, shrink = TRUE, scales = 'free') +
   expand_limits(y=0) + ggtitle('Proportions of major phyla at day 21', subtitle = 'Feces') +
   ylab('proportion of total community')
@@ -966,28 +952,28 @@ p.fecesphyla.D21 <- filter(FS2.phylum.relabund, tissue == 'feces' & day == 21 & 
 
 p.cecphyla.D21 <- filter(FS2.phylum.relabund, tissue == 'cecum' & day == 21 & variable %in% D21phy) %>%
   ggplot(aes(x=treatment, y=value, fill=treatment)) +
-  geom_boxplot()+ scale_fill_brewer(palette = 'Dark2') +
+  geom_boxplot()+ scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) +
   facet_wrap(~variable, shrink = TRUE, scales = 'free') +
   expand_limits(y=0) + ggtitle('Proportions of major phyla at day 21', subtitle = 'Cecal mucosa') +
   ylab('proportion of total community')
 
 p.colonphyla.D21 <- filter(FS2.phylum.relabund, tissue == 'colon' & day == 21 & variable %in% D21phy) %>%
   ggplot(aes(x=treatment, y=value, fill=treatment)) +
-  geom_boxplot()+ scale_fill_brewer(palette = 'Dark2') +
+  geom_boxplot()+ scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) +
   facet_wrap(~variable, shrink = TRUE, scales = 'free') +
   expand_limits(y=0) + ggtitle('Proportions of major phyla at day 21', subtitle = 'Colonic mucosa') +
   ylab('proportion of total community')
 
 p.ileumphyla.D21 <- filter(FS2.phylum.relabund, tissue == 'ileum' & day == 21 & variable %in% D21phy) %>%
   ggplot(aes(x=treatment, y=value, fill=treatment)) +
-  geom_boxplot()+ scale_fill_brewer(palette = 'Dark2') +
+  geom_boxplot()+ scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) +
   facet_wrap(~variable, shrink = TRUE, scales = 'free') +
   expand_limits(y=0) + ggtitle('Proportions of major phyla at day 21', subtitle = 'Ileal mucosa') +
   ylab('proportion of total community')
 
 p.cec_cont_RNAphyla.D21 <- filter(FS2.phylum.relabund, tissue == 'cec_cont_RNA' & day == 21 & variable %in% D21phy) %>%
   ggplot(aes(x=treatment, y=value, fill=treatment)) +
-  geom_boxplot()+ scale_fill_brewer(palette = 'Dark2') +
+  geom_boxplot()+ scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) +
   facet_wrap(~variable, shrink = TRUE, scales = 'free') +
   expand_limits(y=0) + ggtitle('Proportions of major phyla at day 21', subtitle = 'Cecal contents (RNA)') +
   ylab('proportion of total community')
@@ -998,7 +984,7 @@ FS2.phylum.relabund$tissue <- factor(FS2.phylum.relabund$tissue, levels = c('ile
 
 p.allphyla.D21 <- filter(FS2.phylum.relabund, tissue != 'cec_cont_DNA', day == 21 & variable %in% D21phy) %>%
   ggplot(aes(x=tissue, y=value, fill=treatment, group=design)) +
-  geom_boxplot()+ scale_fill_brewer(palette = 'Dark2') +
+  geom_boxplot()+ scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) +
   facet_wrap(~variable, shrink = TRUE, scales = 'free') +
   expand_limits(y=0) + ggtitle('Proportions of major phyla at day 21', subtitle = 'Cecal contents (RNA)') +
   ylab('proportion of total community')
@@ -1010,7 +996,7 @@ p.allphyla.D21 <- filter(FS2.phylum.relabund, tissue != 'cec_cont_DNA', day == 2
 
 x <- "qacc sacc sallseqid staxids sblastnames salltitles evalue qstart qend sstart send sscinames pident length"
 x <- unlist(strsplit(x, split = ' '))
-### NEED MY BUT FILES ###
+
 blastn <- read.table('./data/butreps_blastn.txt', header = FALSE, sep = '\t', stringsAsFactors = FALSE)
 
 blast <- read.table('./data/butreps_blastx2.txt', header = FALSE, sep = '\t', stringsAsFactors = FALSE)
@@ -1020,14 +1006,12 @@ colnames(blastn) <- x
 
 blast$tit1 <- gsub('.* \\[(.*)\\]', '\\1', blast$salltitles)
 blast$tit1 <- paste(blast$tit1, blast$pident, sep = ' ')  # change this if need to alter names of but otus
-blast$tit1
-blast$salltitles
 
 # read in mothur shared file #
 shared2 <- read.table('./data/but2.shared', header = TRUE, stringsAsFactors = FALSE)
 #hist(rowSums(shared2[,-c(1,2,3)]), breaks = 100)
 
-shared2[57,]
+#shared2[57,]
 sort(rowSums(shared2[,-c(1,2,3)]))
 rowSums(shared2[,-c(1,2,3)]) > 2000
 
@@ -1049,7 +1033,7 @@ rownames(shared2) <- shared2$Group
 otu2 <- shared2[,-c(1,2,3)]
 
 otu2 <- otu2[rowSums(otu2) > 2000,]
-
+library(vegan)
 otu2.r <- rrarefy(otu2, 2992)
 otu3.rel <- otu2/rowSums(otu2)
 otu2.r <- otu2.r[,colSums(otu2.r) > 0]
@@ -1079,12 +1063,14 @@ colnames(meta) <- c('group', 'experiment', 'tissue', 'day', 'pig_num', 'treatmen
 #meta$tissue[is.na(meta$day)][2] <- 'cec_cont_DNA' # this is the old line...
 meta$tissue[is.na(meta$day)] <- 'cec_cont_DNA'  # replaced it with this...
 
+meta[is.na(meta$day),]
+meta[is.na(meta$pig_num),]
+
+
 meta$day[is.na(meta$day)] <- 21
 meta$pig_num[is.na(meta$pig_num)] <- 75
 meta$treatment[is.na(meta$treatment)] <- 'RPS'
 
-########## I DONT TRUST THIS!!!!!!!!! ###########
-######### WHERE DOES THE PIGNUM 75 in the pig 97 data come from??????????? ############
 meta[57,]
 meta <- meta[-57,]  # why? this was to remove pig 97 from the data 
 meta[57,]
@@ -1134,22 +1120,23 @@ meta$shannon <- vegan::diversity(otu2.r, index = 'shannon')
 
 # filter(FecalTime.meta, day %in% c(0,12,15,19,21)) %>%
 #  ggplot() + geom_boxplot(aes(day, shannon, fill = treatment)) +
-#  scale_fill_brewer(palette = 'Dark2') + ggtitle('Alpha diversity of feces over time')
+#  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ggtitle('Alpha diversity of feces over time')
 
 # USE THIS FIG FOR FECES ALPHA DIV #
 p.butfeces.alphatime <- filter(meta, day %in% c(0,12,15,19,21) & tissue == 'feces') %>%
   ggplot() + geom_boxplot(aes(day, invsimpson, fill = treatment)) +
-  scale_fill_brewer(palette = 'Dark2') + ggtitle('Alpha diversity of feces over time')
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ggtitle('Alpha diversity of feces over time')
 
 p.buttissue.alpha <- filter(meta, day == 21) %>%
   ggplot() + geom_boxplot(aes(tissue, invsimpson, fill = treatment)) +
-  scale_fill_brewer(palette = 'Dark2') + ggtitle('Alpha diversity of tissues')
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ggtitle('Alpha diversity of tissues')
 
 ## nifty little thing to do wilcoxon tests on alpha diversity at each day between the two treatments
 
 but_fecal_alpha_wilcox_results <- filter(meta, tissue == 'feces') %>% group_by(day) %>%
   do(wilco = wilcox.test(invsimpson~treatment, data=., paired=FALSE)) %>%
   summarise(day, Wilcox = wilco$p.value)
+
 
 # wilcoxon tests for tissues
 but_tissue_alpha_wilcox_results <- filter(meta, day ==21) %>% group_by(tissue) %>%
@@ -1172,8 +1159,12 @@ attributes(FS2.bray2)$Labels == meta$group # still good!
 ############ here for the dispersion stuff #################
 
 dispers <- betadisper(FS2.bray2, group = meta$design)
+dispers$distances
+
 pdispers <- permutest(dispers, pairwise = TRUE)
+anova(dispers)
 pdispers$pairwise$observed
+
 dispersdf <- data.frame(dispers$distances)
 dispersdf$group <- rownames(dispersdf)
 meta$group == dispersdf$group
@@ -1189,17 +1180,29 @@ dispersion_supp_but$comp <- gsub('-', ' vs ', dispersion_supp_but$comp)
 
 dispersion_supp_all <- merge(dispersion_supp_16S, dispersion_supp_but, by = 'comp')
 
-#write.table(dispersion_supp_all,'dispersion_supp_all.txt' ,sep = '\t', quote = FALSE, row.names = FALSE, col.names = TRUE)
+
+dispersion_supp_all$comp
+
+goodones <- c(grep('(.*)_([0-9]+)_(.*) vs .*_[0-9]+_\\3',dispersion_supp_all$comp),
+  grep('(.*)_([0-9]+)_(.*) vs .*_\\2_.*',dispersion_supp_all$comp))
+
+dispersion_supp_all <- dispersion_supp_all[goodones,]
+
+write.table(dispersion_supp_all,'./output/dispersion_supp_all.txt' ,sep = '\t', quote = FALSE, row.names = FALSE, col.names = TRUE)
 but.metadisp <- merge(meta, dispersdf, by = 'group')
+
+# this is a bad way to do this command.  SHould probably switch to pipes %>% %>% %>% %>% %>% %>% %>% %>% 
 
 but.dispgroups <- summarise(group_by(.data = but.metadisp, design), average_dist=mean(dispers.distances))
 
 but.dispgroups <- unique(inner_join(but.dispgroups, meta))
 but.dispgroups$type <- 'but'
+
+
 #############but dispersion fig 2 ###########
 p.butfecal.dispersion.time <- but.metadisp %>% filter(tissue == 'feces' & day %in% c(0:22)) %>%
   ggplot(aes(x=day, y=dispers.distances, fill = treatment, group = design)) +
-  geom_boxplot() + scale_fill_brewer(palette = 'Dark2') +
+  geom_boxplot() + scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) +
   ylab("distance to the group median") + ggtitle("Fecal beta diversity dispersion over time")
 
 # maybe this is useful?  polish a little bit
@@ -1208,19 +1211,20 @@ but.fecaldisptime <-  but.dispgroups %>% filter(tissue == 'feces' & day < 22)
 but.fecaldisptime$day <- as.numeric(but.fecaldisptime$day)
 
 ############ THIS FOR FIG2 BUT DISP ################
+
 my_title <- expression(paste(italic("but"), " community dispersion"))
 p.butfecal.dispersionAVG <- ggplot(but.fecaldisptime, aes(x=day, y=average_dist, color = treatment)) +
   geom_vline(xintercept = 12)+ geom_point(size = 2.5) +  geom_line() + ylim(c(.3,.6))+
   #ggtitle(my_title,
   #        subtitle = "Vegan's betadisper(): how much variability is there in a group's community structure?") +
-  ylab("Avg dist to the group mean") + scale_color_brewer(palette = "Dark2")
+  ylab("distance to the group mean") + scale_color_brewer(palette = "Dark2", labels=c('CON', 'RPS'))
 
 #fecaldisptime$average_dist
 #########Supplement #########
 p.but.tissue.dispersion <- but.metadisp %>% filter(day == 21) %>%
   ggplot(aes(x=tissue, y=dispers.distances, group=design, fill=treatment)) +
   geom_boxplot() +
-  scale_fill_brewer(palette = 'Dark2') + ggtitle('Distance to group centroid')
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ggtitle('Distance to group centroid')
 
 # but NMDS Ordination #
 
@@ -1228,37 +1232,14 @@ rownames(meta) <- meta$group
 rownames(otu2.r) == rownames(meta)
 
 
-FS2.butord <- NMDS_ellipse(metadata = meta, OTU_table = otu2.r, grouping_set = 'design')
+FS2.butord <- NMDS_ellipse(metadata = meta, OTU_table = otu2.r, grouping_set = 'design', 
+                           autotransform = FALSE)
 
+stressplot(FS2.butord[[3]])
 
-#FS2.mds <- metaMDS(FS2.bray2, k = 2,trymax = 1000, autotransform = FALSE)
-#FS2.mds$stress
+FS2.but.metanmds <- FS2.butord[[1]]
 
-#FS2.nmds <-as.data.frame(FS2.mds$points)
-#FS2.nmds$group <- rownames(FS2.nmds)
-
-#FS2.but.metanmds <- merge(meta, FS2.nmds, by = 'group')
-#FS2.but.metanmds$design <- factor(FS2.but.metanmds$design)
-#FS2.but.metanmds$treatment <- factor(FS2.but.metanmds$treatment)
-#FS2.but.metanmds$tissue <- factor(FS2.but.metanmds$tissue)
-
-FS2.but.metanmds$treatmentXday <- paste(FS2.but.metanmds$treatment, FS2.but.metanmds$day, sep = ' day ')
-FS2.but.metanmds$treatmentXday <- factor(FS2.but.metanmds$treatmentXday)
-
-FS2.nmds$group == FS2.but.metanmds$group
-#FS2.but.metanmds$group <- as.character(FS2.but.metanmds$group)
-FS2.but.metanmds <- FS2.but.metanmds[match(FS2.nmds$group,FS2.but.metanmds$group),]
-FS2.nmds$group == FS2.but.metanmds$group
-
-
-ord <- ordiellipse(FS2.mds,FS2.but.metanmds$design, label = TRUE, conf = .95, kind = 'se', draw = 'none')
-NMDS.mean <- aggregate(FS2.but.metanmds[,10:11], list(group=FS2.but.metanmds$design), mean)
-
-df_ell <- data.frame()
-for (d in levels(FS2.but.metanmds$design)){
-  df_ell <- rbind(df_ell, cbind(as.data.frame(with(FS2.but.metanmds[FS2.but.metanmds$design == d,],
-                                                   veganCovEllipse(ord[[d]]$cov, ord[[d]]$center, ord[[d]]$scale))),group=d))
-}
+df_ell <- FS2.butord[[2]]
 
 df_ell$treatment <- NA
 df_ell$treatment[grep('RPS', df_ell$group)] <- 'RPS'
@@ -1266,98 +1247,36 @@ df_ell$treatment[grep('control', df_ell$group)] <- 'control'
 df_ell$tissue <- gsub('(.*)_[0-9]+_.*', '\\1', df_ell$group)
 df_ell$day <-gsub('(.*)_([0-9]+)_.*', '\\2', df_ell$group)
 
-colnames(NMDS.mean) <- c('design', 'groupX', 'groupY')
-FS2.but.metanmds <- merge(FS2.but.metanmds, NMDS.mean , by='design')
+# colnames(NMDS.mean) <- c('design', 'groupX', 'groupY')
+# FS2.but.metanmds <- merge(FS2.but.metanmds, NMDS.mean , by='design')
 
 df_ell$treatmentXday <- paste(df_ell$treatment, df_ell$day, sep = ' ')
 FS2.but.metanmds$day <- factor(FS2.but.metanmds$day)
 
-### D0 vs D21 ordination
-# p.0v21.but <- ggplot(data=subset(FS2.but.metanmds, tissue == 'feces' & day %in% c(0,21)), aes(x=MDS1, y = MDS2)) +
-#   geom_point(aes(color=treatment, shape=day), size=2.7, alpha = .75) +
-#   geom_segment(aes(x=MDS1, y=MDS2, xend=groupX, yend=groupY, color=treatment), size = .3) +
-#   geom_path(data = subset(df_ell, day %in% c(0, 21) & tissue == 'feces'), aes(x=NMDS1, y=NMDS2, group=treatmentXday, color=treatment), size=1) +
-#   ggtitle('Feces community similarity', subtitle = 'Day 0 vs Day 21\nPERMANOVA: control: F=10.8, p=0.0001; RPS: F=11.5, p=0.0001') +
-#   scale_color_brewer(palette = 'Dark2') + labs(caption = 'Ordination stress = 0.221')
-#
-# p.0v21.but
-#
-# # D12
-#
-# p.d12.but <- ggplot(data=subset(FS2.but.metanmds, tissue == 'feces' & day == 12), aes(x=MDS1, y = MDS2)) +
-#   geom_point(aes(color=treatment, shape=day), size=2.1) +
-#   geom_segment(aes(x=MDS1, y=MDS2, xend=groupX, yend=groupY, linetype=day, color=treatment)) +
-#   geom_path(data = subset(df_ell, day ==12  & tissue == 'feces'), aes(x=NMDS1, y=NMDS2, group=treatmentXday, color=treatment, linetype=day), size=1) +
-#   ggtitle('Feces Day 12') +
-#   geom_point(aes(x=groupX, y=groupY, color=treatment, shape=day),size=5) + scale_color_brewer(palette = 'Dark2')
-#
-# p.d12.but
-#
-# # d15
-# p.d15.but <- ggplot(data=subset(FS2.but.metanmds, tissue == 'feces' & day == 15), aes(x=MDS1, y = MDS2)) +
-#   geom_point(aes(color=treatment, shape=day), size=2.1) +
-#   geom_segment(aes(x=MDS1, y=MDS2, xend=groupX, yend=groupY, linetype=day, color=treatment)) +
-#   geom_path(data = subset(df_ell, day ==15  & tissue == 'feces'), aes(x=NMDS1, y=NMDS2, group=treatmentXday, color=treatment, linetype=day), size=1) +
-#   ggtitle('Feces Day 15') +
-#   geom_point(aes(x=groupX, y=groupY, color=treatment, shape=day),size=5) + scale_color_brewer(palette = 'Dark2')
-#
-# p.d15.but
-#
-# # d19
-# p.d19.but <- ggplot(data=subset(FS2.but.metanmds, tissue == 'feces' & day == 19), aes(x=MDS1, y = MDS2)) +
-#   geom_point(aes(color=treatment, shape=day), size=2.1) +
-#   geom_segment(aes(x=MDS1, y=MDS2, xend=groupX, yend=groupY, linetype=day, color=treatment)) +
-#   geom_path(data = subset(df_ell, day ==19  & tissue == 'feces'), aes(x=NMDS1, y=NMDS2, group=treatmentXday, color=treatment, linetype=day), size=1) +
-#   ggtitle('Feces Day 19') +
-#   geom_point(aes(x=groupX, y=groupY, color=treatment, shape=day),size=5) + scale_color_brewer(palette = 'Dark2')
-#
-# p.d19.but
-#
-# # d21
-# p.d21.but <- ggplot(data=subset(FS2.but.metanmds, tissue == 'feces' & day == 21), aes(x=MDS1, y = MDS2)) +
-#   geom_point(aes(color=treatment, shape=day), size=2.1) +
-#   geom_segment(aes(x=MDS1, y=MDS2, xend=groupX, yend=groupY, linetype=day, color=treatment)) +
-#   geom_path(data = subset(df_ell, day ==21  & tissue == 'feces'), aes(x=NMDS1, y=NMDS2, group=treatmentXday, color=treatment, linetype=day), size=1) +
-#   ggtitle('Feces Day 21') +
-#   geom_point(aes(x=groupX, y=groupY, color=treatment, shape=day),size=5) + scale_color_brewer(palette = 'Dark2')
-#
-# p.d21.but
-#
-# #
-#
-# p.cec_cont_RNA.but <- ggplot(data=subset(FS2.but.metanmds, tissue == 'cec_cont_RNA' & day == 21), aes(x=MDS1, y = MDS2)) +
-#   geom_point(aes(color=treatment, shape=day), size=2.1) +
-#   geom_segment(aes(x=MDS1, y=MDS2, xend=groupX, yend=groupY, linetype=day, color=treatment)) +
-#   geom_path(data = subset(df_ell, day ==21  & tissue == 'cec_cont_RNA'), aes(x=NMDS1, y=NMDS2, group=treatmentXday, color=treatment, linetype=day), size=1) +
-#   ggtitle('Cec_cont_RNA Day 21') +
-#   geom_point(aes(x=groupX, y=groupY, color=treatment, shape=day),size=5) + scale_color_brewer(palette = 'Dark2')
-#
-# p.cec_cont_RNA.but
 
-# dont know if I need these daily ordinations above...#
-
-groupxday <- unique(FS2.but.metanmds[,c(4,5,12:14)]) # this little dataframe is needed for annotations that dont look bad.
+colnames(FS2.but.metanmds)
+groupxday <- unique(FS2.but.metanmds[,c(3,4,6,7,12,13)]) # this little dataframe is needed for annotations that dont look bad.
 groupxday <- filter(groupxday, day %in% c(0:22) & tissue == 'feces')
 
-p.but.time.ord <- FS2.but.metanmds %>% filter(tissue == 'feces' & day %in% c(0:21)) %>% ggplot(aes(x=groupX, y=groupY)) +
-  geom_path(aes(group=treatment, color=treatment), size = 2, alpha=.7) +
+p.but.time.ord <- FS2.but.metanmds %>% filter(tissue == 'feces' & day %in% c(0:21)) %>% ggplot(aes(x=centroidX, y=centroidY)) +
+  geom_line(aes(group=treatment, color=treatment), size = 2, alpha=.7) +
   geom_point(aes(color=treatment), size=7) +
-  geom_text(data=groupxday, aes(x=groupX, y=groupY, label=day))+
-  scale_color_brewer(palette = 'Dark2')  + ggtitle('Fecal community structure over time', subtitle = 'Treatment group centroids') + ylab('NMDS2') + xlab('NMDS1')
+  geom_text(data=groupxday, aes(x=centroidX, y=centroidY, label=day))+
+  scale_color_brewer(palette = "Dark2", labels=c('CON', 'RPS'))  + ggtitle('Fecal community structure over time', subtitle = 'Treatment group centroids') + ylab('NMDS2') + xlab('NMDS1')
 p.but.time.ord
 
 
 ########### FIGURE 2 ###########
 # the above one is nice for showing progression over time maybe
 
-groupxtiss <- unique(FS2.but.metanmds[,c(4,5,12:14)]) # this little dataframe is needed for annotations that dont look bad.
+groupxtiss <- unique(FS2.but.metanmds[,c(3,4,6,7,12,13)]) # this little dataframe is needed for annotations that dont look bad.
 groupxtiss <- filter(groupxtiss, day == 21)
 
-p.but.tiss.ord <- FS2.but.metanmds %>% filter(day %in% c(21)) %>% ggplot(aes(x=groupX, y=groupY)) +
+p.but.tiss.ord <- FS2.but.metanmds %>% filter(day %in% c(21)) %>% ggplot(aes(x=centroidX, y=centroidY)) +
   geom_point(aes(color=treatment), size=8, show.legend = FALSE) +
   geom_path(data = subset(df_ell, day == 21), aes(x=NMDS1, y=NMDS2, group=group, color=treatment), size=1, show.legend = FALSE) +
-  geom_text(data=groupxtiss, aes(x=groupX, y=groupY, label=tissue), show.legend = FALSE)+
-  scale_color_brewer(palette = 'Dark2') + labs(x='NMDS 1', y= 'NMDS 2', caption = 'but, Ordination stress: 0.22') #+
+  geom_text(data=groupxtiss, aes(x=centroidX, y=centroidY, label=tissue), show.legend = FALSE)+
+  scale_color_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + labs(x='NMDS 1', y= 'NMDS 2') #+
 #ggtitle('Bray-curtis based NMDS ordination of tissues at day 21')
 p.but.tiss.ord
 
@@ -1408,13 +1327,32 @@ butadon <- filter(poop_time.but, day < 22)
 butadon$type <- 'but'
 adonfobuts$type <- '16S'
 
+butadon$p.adjusted <- p.adjust(butadon$p.value)
+adonfobuts$p.adjusted <- p.adjust(adonfobuts$p.value)
+
+
 alladon <- rbind(butadon, adonfobuts)
+alladon$p.adjusted[alladon$p.adjusted > 0.05] <- NA
+
+alladon$p.adjusted
+
+alladon$lab <- ifelse(alladon$p.adjusted < 0.001, 'p < 0.001', 
+                      ifelse(alladon$p.adjusted < 0.01, 'p < 0.01', 
+                             ifelse(alladon$p.adjusted < 0.05, 'p < 0.05')))
+
+#round(alladon$p.adjusted, 3)
+#alladon$lab <- paste('p =', alladon$p.adjusted)
+#alladon$lab[grep('NA', alladon$lab)] <- NA
 
 p.alladon <- ggplot(alladon, aes(x=day, y=F.Model, group=type, color=type)) +
   geom_line()+geom_point(size=3)+ geom_vline(xintercept = 12, color='purple') +
-  geom_text_repel(aes(y = F.Model , label = paste('p =', p.value))) +
-  scale_color_brewer(palette = 'Set1') + ylab(label = 'PERMANOVA F stat.')
-library(ggrepel)
+  geom_text(aes(label=lab), nudge_y = .2, fontface = 'bold') +
+  scale_color_brewer(palette = 'Set1') + ylab(label = 'PERMANOVA F stat.') 
+
+
+
+
+
 ##########################################################################
 # Writing stuff for correlations #
 
@@ -1452,13 +1390,13 @@ p.but.otu67.tiss <- tiss %>% filter(otu == 'Otu067' & day ==21) %>%
   ggplot(aes(x=tissue, y=value))  +
   geom_boxplot(aes(x=tissue, y=value, group=design, fill=treatment), show.legend = TRUE) +
   #ggtitle('Relative proportion of OTU87 in each tissue a Day 21') +
-  scale_fill_brewer(palette = 'Dark2') + ylab('proportion of total community')
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ylab('proportion of total community')
 
-p.but.otu87.fec <- but22 %>% filter(otu == 'Otu067') %>%
+p.but.otu67.fec <- but22 %>% filter(otu == 'Otu067') %>%
   ggplot(aes(x=day, y=value))  +
   #geom_vline(xintercept = 12, colour='black')+
   geom_boxplot(aes(x=day, y=value, group=design, fill=treatment), show.legend = FALSE) +# ggtitle('Relative proportion of OTU87 in feces over time')
-  scale_fill_brewer(palette = 'Dark2')+ ylab('proportion of total community')
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS'))+ ylab('proportion of total community')
 
 #switchd <- but22 %>% filter(otu == 'Otu067' & day == 21)
 
@@ -1507,7 +1445,7 @@ sigtab.but.D0$otu <- rownames(sigtab.but.D0)
 
 p.but.deseq.D0 <- ggplot(sigtab.but.D0, aes(x=reorder(rownames(sigtab.but.D0), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
   geom_bar(stat='identity') + geom_text(aes(x=rownames(sigtab.but.D0), y=0, label = name), size=3)+ labs(x="otu")+
-  scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
                                              axis.title.x=element_text(size = 10),
                                              axis.title.y=element_text(size = 10))+ ggtitle('Differentially abundant genera: feces')+ coord_flip()
@@ -1540,7 +1478,7 @@ sigtab.but.D12$otu <- rownames(sigtab.but.D12)
 
 p.but.deseq.D12 <- ggplot(sigtab.but.D12, aes(x=reorder(rownames(sigtab.but.D12), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
   geom_bar(stat='identity') + geom_text(aes(x=rownames(sigtab.but.D12), y=0, label = name), size=3)+ labs(x="Genus")+
-  scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
                                              axis.title.x=element_text(size = 10),
                                              axis.title.y=element_text(size = 10))+ ggtitle('Differentially abundant but OTUs: D12 feces')+ coord_flip()
@@ -1573,7 +1511,7 @@ sigtab.but.D15$otu <- rownames(sigtab.but.D15)
 
 p.but.deseq.D15 <- ggplot(sigtab.but.D15, aes(x=reorder(rownames(sigtab.but.D15), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
   geom_bar(stat='identity') + geom_text(aes(x=rownames(sigtab.but.D15), y=0, label = name), size=3)+ labs(x="Genus")+
-  scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
                                              axis.title.x=element_text(size = 10),
                                              axis.title.y=element_text(size = 10))+ ggtitle('Differentially abundant but OTUs: D15 feces')+ coord_flip()
@@ -1606,7 +1544,7 @@ sigtab.but.D19$otu <- rownames(sigtab.but.D19)
 
 p.but.deseq.D19 <- ggplot(sigtab.but.D19, aes(x=reorder(rownames(sigtab.but.D19), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
   geom_bar(stat='identity') + geom_text(aes(x=rownames(sigtab.but.D19), y=0, label = name), size=3)+ labs(x="Genus")+
-  scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
                                              axis.title.x=element_text(size = 10),
                                              axis.title.y=element_text(size = 10))+ ggtitle('Differentially abundant but OTUs: D19 feces')+ coord_flip()
@@ -1637,47 +1575,62 @@ sigtab.but.D21$name <- butswap[rownames(sigtab.but.D21)]
 sigtab.but.D21$tissue <- 'D21_feces'
 sigtab.but.D21$otu <- rownames(sigtab.but.D21)
 
+# now a lot of garbage to make sure the italics are correct...
+
+sigtab.but.D21$PID <- sub('.* ([0-9]*\\.?[0-9]+)','\\1' ,sigtab.but.D21$name)
+sigtab.but.D21$ital <- sub('(.*) ([0-9]*\\.?[0-9]+)','\\1' ,sigtab.but.D21$name)
+sigtab.but.D21$ital <- sub('uncultured ', '', sigtab.but.D21$ital)
+sigtab.but.D21$ital <- sub('\\[', '', sigtab.but.D21$ital)
+sigtab.but.D21$ital <- sub('\\]', '', sigtab.but.D21$ital)
+
+sigtab.but.D21$ital2 <- sub('(.*) (sp\\. ?.*)', '\\1', sigtab.but.D21$ital)
+sigtab.but.D21$nonital <- sub('(.*) (sp\\. ?.*)', '\\2', sigtab.but.D21$ital)
+sigtab.but.D21$nonital[sigtab.but.D21$ital2 == sigtab.but.D21$nonital] <- ''
+
+
+sigtab.but.D21$ital2[3] <- 'Firmicutes'
+sigtab.but.D21$nonital[3] <- 'bacterium CAG:176'
+
+sigtab.but.D21$ital2[6] <- 'Coprococcus catus'
+sigtab.but.D21$nonital[6] <- 'GD/7'
+
+sigtab.but.D21$ital2[9] <- 'Lachnospiraceae'
+sigtab.but.D21$nonital[9] <- 'bacterium V9D3004'
+
+sigtab.but.D21$ital2[13] <- 'Mogibacterium timidum'
+sigtab.but.D21$nonital[13] <- 'ATCC 33093'
+
+sigtab.but.D21$ital2[17] <- 'Peptostreptococcaceae'
+sigtab.but.D21$nonital[17] <- 'bacterium oral taxon 113 str. W5053'
+
+sigtab.but.D21$ital2[26] <- 'Firmicutes'
+sigtab.but.D21$nonital[26] <- 'bacterium CAG:176'
+
+sigtab.but.D21$ital2[28] <- 'Firmicutes'
+sigtab.but.D21$nonital[28] <- 'bacterium CAG:176'
+
+sigtab.but.D21$ital2[30] <- 'Lachnospiraceae'
+sigtab.but.D21$nonital[30] <- 'bacterium P6B14'
+
+sigtab.but.D21$ital2[31] <- 'Clostridiales'
+sigtab.but.D21$nonital[31] <- 'bacterium CoAT_30-4c'
+
+# end garbage #
+
+# need ggscinames here... and the grid package
+
+sigtab.but.D21$imp <- sigtab.but.D21$otu %in% c('Otu007','Otu034', 'Otu045','Otu067')
+
 p.but.deseq.D21 <- ggplot(sigtab.but.D21, aes(x=reorder(rownames(sigtab.but.D21), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
-  geom_bar(stat='identity') + geom_text(aes(x=rownames(sigtab.but.D21), y=0, label = name), size=3)+ labs(x="Genus")+
-  scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
+  geom_bar(stat='identity') + geom_text_sciname(aes(x=rownames(sigtab.but.D21), y=0, sci=ital2, nonsci=nonital, important=imp), size=3)+ labs(x="Genus")+
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
                                              axis.title.x=element_text(size = 10),
                                              axis.title.y=element_text(size = 10))+ ggtitle('Differentially abundant but OTUs: D21 feces')+ coord_flip()
 p.but.deseq.D21
 
-# D12 15 19 21 LUMPED #
-# 
-# FS2.butlump <- subset_samples(FS2, tissue == 'feces' & day != 0)
-# 
-# sample_sums(FS2.butlump)
-# FS2.butlump <- prune_taxa(taxa_sums(FS2.butlump) > 1, FS2.butlump)
-# 
-# rowSums(FS2.butlump@otu_table)
-# 
-# FS2.butlump.De <- phyloseq_to_deseq2(FS2.butlump, ~ treatment)
-# 
-# FS2.butlump.De <- DESeq(FS2.butlump.De, test = "Wald", fitType = "parametric")
-# 
-# res.butlump = results(FS2.butlump.De, cooksCutoff = FALSE, pAdjustMethod = 'BH')
-# sigtab.but.butlump = res.butlump[which(res.butlump$padj < .05), ]
-# sigtab.but.butlump <- as.data.frame(sigtab.but.butlump)
-# 
-# format(sigtab.but.butlump$padj, scientific = TRUE)
-# sigtab.but.butlump$newp <- format(round(sigtab.but.butlump$padj, digits = 3), scientific = TRUE)
-# sigtab.but.butlump$Treatment <- ifelse(sigtab.but.butlump$log2FoldChange >=0, "RPS", "Control")
-# 
-# sigtab.but.butlump$name <- butswap[rownames(sigtab.but.butlump)]
-# sigtab.but.butlump$tissue <- 'lumped_feces'
-# sigtab.but.butlump$otu <- rownames(sigtab.but.butlump)
-# 
-# p.but.deseq.butlump <- ggplot(sigtab.but.butlump, aes(x=reorder(rownames(sigtab.but.butlump), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
-#   geom_bar(stat='identity') + geom_text(aes(x=rownames(sigtab.but.butlump), y=0, label = name), size=3)+
-#   scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
-#                                              axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
-#                                              axis.title.x=element_text(size = 10),
-#                                              axis.title.y=element_blank())+ ggtitle('feces (D12-21 combined)')+ coord_flip()
-# ####### USE THIS FOR BUTFIG #######
-# p.but.deseq.butlump
+library(grid)
+library(ggscinames)
 
 # D21.ileum #
 
@@ -1704,13 +1657,37 @@ sigtab.but.D21.ileum$name <- butswap[rownames(sigtab.but.D21.ileum)]
 sigtab.but.D21.ileum$tissue <- 'ileum'
 sigtab.but.D21.ileum$otu <- rownames(sigtab.but.D21.ileum)
 
+# italics stuff...
+
+sigtab.but.D21.ileum$PID <- sub('.* ([0-9]*\\.?[0-9]+)','\\1' ,sigtab.but.D21.ileum$name)
+sigtab.but.D21.ileum$ital <- sub('(.*) ([0-9]*\\.?[0-9]+)','\\1' ,sigtab.but.D21.ileum$name)
+sigtab.but.D21.ileum$ital <- sub('uncultured ', '', sigtab.but.D21.ileum$ital)
+sigtab.but.D21.ileum$ital <- sub('\\[', '', sigtab.but.D21.ileum$ital)
+sigtab.but.D21.ileum$ital <- sub('\\]', '', sigtab.but.D21.ileum$ital)
+
+sigtab.but.D21.ileum$ital2 <- sub('(.*) (sp\\. ?.*)', '\\1', sigtab.but.D21.ileum$ital)
+sigtab.but.D21.ileum$nonital <- sub('(.*) (sp\\. ?.*)', '\\2', sigtab.but.D21.ileum$ital)
+sigtab.but.D21.ileum$nonital[sigtab.but.D21.ileum$ital2 == sigtab.but.D21.ileum$nonital] <- ''
+# sigtab.but.D21.ileum$ital2[10] <- 'Clostridiales'
+# sigtab.but.D21.ileum$nonital[10] <- 'bacterium CoAT_30-4c'
+
+# end garbage #
+
+
+sigtab.but.D21.ileum$imp <- sigtab.but.D21.ileum$otu %in% c('Otu007','Otu034', 'Otu045','Otu067')
+
+sigtab.but.D21.ileum$PID <- paste('(', round(as.numeric(sigtab.but.D21.ileum$PID),0), ')', sep='')
+
 p.but.deseq.D21.ileum <- ggplot(sigtab.but.D21.ileum, aes(x=reorder(rownames(sigtab.but.D21.ileum), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
-  geom_bar(stat='identity', show.legend = FALSE) + geom_text(aes(x=rownames(sigtab.but.D21.ileum), y=0, label = name), size=3)+
-  scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
-                                             axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
-                                             axis.title.x=element_text(size = 10),
-                                             axis.title.y=element_blank())+ ggtitle('Ileal mucosa')+ coord_flip()
+  geom_bar(stat='identity', show.legend = FALSE) +
+  geom_text_sciname(aes(x=rownames(sigtab.but.D21.ileum), y=0, sci = ital2, nonsci=paste(nonital, PID, sep = ' '), important=imp), size=3)+
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) +
+  theme(axis.text.x=element_text(color = 'black', size = 12),
+        axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
+        axis.title.x=element_text(size = 10), axis.title.y=element_blank())+ ggtitle('Ileal mucosa')+ coord_flip()
+
 p.but.deseq.D21.ileum
+
 
 #  D21.cecum #
 
@@ -1738,14 +1715,37 @@ sigtab.but.D21.cecum$name <- butswap[rownames(sigtab.but.D21.cecum)]
 sigtab.but.D21.cecum$tissue <- 'cecum'
 sigtab.but.D21.cecum$otu <- rownames(sigtab.but.D21.cecum)
 
+# itallics stuff
+
+sigtab.but.D21.cecum$PID <- sub('.* ([0-9]*\\.?[0-9]+)','\\1' ,sigtab.but.D21.cecum$name)
+sigtab.but.D21.cecum$ital <- sub('(.*) ([0-9]*\\.?[0-9]+)','\\1' ,sigtab.but.D21.cecum$name)
+sigtab.but.D21.cecum$ital <- sub('uncultured ', '', sigtab.but.D21.cecum$ital)
+sigtab.but.D21.cecum$ital <- sub('\\[', '', sigtab.but.D21.cecum$ital)
+sigtab.but.D21.cecum$ital <- sub('\\]', '', sigtab.but.D21.cecum$ital)
+
+sigtab.but.D21.cecum$ital2 <- sub('(.*) (sp\\. .*)', '\\1', sigtab.but.D21.cecum$ital)
+sigtab.but.D21.cecum$nonital <- sub('(.*) (sp\\. .*)', '\\2', sigtab.but.D21.cecum$ital)
+sigtab.but.D21.cecum$nonital[sigtab.but.D21.cecum$ital2 == sigtab.but.D21.cecum$nonital] <- ''
+sigtab.but.D21.cecum$ital2[10] <- 'Clostridiales'
+sigtab.but.D21.cecum$nonital[10] <- 'bacterium CoAT_30-4c'
+
+# end garbage #
+
+sigtab.but.D21.cecum$imp <- sigtab.but.D21.cecum$otu %in% c('Otu007','Otu034', 'Otu045','Otu067')
+
+sigtab.but.D21.cecum$PID <- paste('(', round(as.numeric(sigtab.but.D21.cecum$PID),0), ')', sep='')
 
 p.but.deseq.D21.cecum <- ggplot(sigtab.but.D21.cecum, aes(x=reorder(rownames(sigtab.but.D21.cecum), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
-  geom_bar(stat='identity', show.legend = FALSE) + geom_text(aes(x=rownames(sigtab.but.D21.cecum), y=0, label = name), size=3)+
-  scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
-                                             axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
-                                             axis.title.x=element_text(size = 10),
-                                             axis.title.y=element_blank())+ ggtitle('Cecal mucosa')+ coord_flip()
+  geom_bar(stat='identity', show.legend = FALSE) +
+  geom_text_sciname(aes(x=rownames(sigtab.but.D21.cecum), y=0, sci = ital2, nonsci=paste(nonital, PID, sep = ' '), important=imp), size=3)+
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) +
+  theme(axis.text.x=element_text(color = 'black', size = 12),
+        axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
+        axis.title.x=element_text(size = 10),
+        axis.title.y=element_blank())+ ggtitle('Cecal mucosa')+ coord_flip()
+
 p.but.deseq.D21.cecum
+
 
 # D21.colon #
 
@@ -1774,10 +1774,10 @@ sigtab.but.D21.colon$otu <- rownames(sigtab.but.D21.colon)
 
 p.but.deseq.D21.colon <- ggplot(sigtab.but.D21.colon, aes(x=reorder(rownames(sigtab.but.D21.colon), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
   geom_bar(stat='identity') + geom_text(aes(x=rownames(sigtab.but.D21.colon), y=0, label = name), size=3)+ labs(x="Genus")+
-  scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
+  scale_fill_brewer(palette = "Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
                                              axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
                                              axis.title.x=element_text(size = 10),
-                                             axis.title.y=element_text(size = 10))+ ggtitle('Differentially abundant but OTUs: D21.colon feces')+ coord_flip()
+                                             axis.title.y=element_text(size = 10))+ ggtitle('Differentially abundant but OTUs: D21.colon')+ coord_flip()
 p.but.deseq.D21.colon
 
 #  cec cont rna  #
@@ -1805,41 +1805,61 @@ sigtab.but.D21.cec_cont_RNA$name <- butswap[rownames(sigtab.but.D21.cec_cont_RNA
 sigtab.but.D21.cec_cont_RNA$tissue <- 'cec_cont_RNA'
 sigtab.but.D21.cec_cont_RNA$otu <- rownames(sigtab.but.D21.cec_cont_RNA)
 
+
+
+
+
+
+fec_cec <- sigtab.but.D21[sigtab.but.D21$otu %in% sigtab.but.D21.cecum$otu,]$otu
+
+fec_cec_il <- fec_cec[fec_cec %in% sigtab.but.D21.ileum$otu]
+
+
+# THESE ARE THE OTUS TO BOLD!!!!!! #######
+all_tiss <- fec_cec_il[fec_cec_il %in% sigtab.but.D21.cec_cont_RNA$otu]
+
+
+# bold_but <- c(grep('Otu007', sigtab.but.D21.cec_cont_RNA$otu),
+#                        grep('Otu034', sigtab.but.D21.cec_cont_RNA$otu),
+#                        grep('Otu045', sigtab.but.D21.cec_cont_RNA$otu),
+#                        grep('Otu067', sigtab.but.D21.cec_cont_RNA$otu))
+
+# all this garbage is to get the proper italics in the figure #
+sigtab.but.D21.cec_cont_RNA$PID <- sub('.* ([0-9]*\\.?[0-9]+)','\\1' ,sigtab.but.D21.cec_cont_RNA$name)
+sigtab.but.D21.cec_cont_RNA$ital <- sub('(.*) ([0-9]*\\.?[0-9]+)','\\1' ,sigtab.but.D21.cec_cont_RNA$name)
+sigtab.but.D21.cec_cont_RNA$ital <- sub('uncultured ', '', sigtab.but.D21.cec_cont_RNA$ital)
+sigtab.but.D21.cec_cont_RNA$ital <- sub('\\[', '', sigtab.but.D21.cec_cont_RNA$ital)
+sigtab.but.D21.cec_cont_RNA$ital <- sub('\\]', '', sigtab.but.D21.cec_cont_RNA$ital)
+sigtab.but.D21.cec_cont_RNA$ital2 <- sub('(.*) sp\\. CAG:[0-9]+', '\\1', sigtab.but.D21.cec_cont_RNA$ital)
+sigtab.but.D21.cec_cont_RNA$nonital <- sub('(.*) (sp\\. CAG:[0-9]+)', '\\2', sigtab.but.D21.cec_cont_RNA$ital)
+sigtab.but.D21.cec_cont_RNA$nonital[sigtab.but.D21.cec_cont_RNA$ital2 == sigtab.but.D21.cec_cont_RNA$nonital] <- ''
+sigtab.but.D21.cec_cont_RNA$ital2[15] <- 'Eubacterium hallii'
+sigtab.but.D21.cec_cont_RNA$nonital[15] <- 'DSM 3353'
+sigtab.but.D21.cec_cont_RNA$ital2[12] <- 'Clostridium'
+sigtab.but.D21.cec_cont_RNA$nonital[12] <- 'sp.'
+#sigtab.but.D21.cec_cont_RNA$lab <- paste('italic(', sigtab.but.D21.cec_cont_RNA$ital2, ') plain(',sigtab.but.D21.cec_cont_RNA$nonital, ' ', sigtab.but.D21.cec_cont_RNA$PID, ')',sep = '')
+
+# end garbage #
+sigtab.but.D21.cec_cont_RNA$PID <- paste('(', round(as.numeric(sigtab.but.D21.cec_cont_RNA$PID),0), ')', sep='')
+
+
+
+
+sigtab.but.D21.cec_cont_RNA$imp <- sigtab.but.D21.cec_cont_RNA$otu %in% c('Otu007','Otu034', 'Otu045','Otu067')
+
 p.but.deseq.D21.cec_cont_RNA <- ggplot(sigtab.but.D21.cec_cont_RNA, aes(x=reorder(rownames(sigtab.but.D21.cec_cont_RNA), log2FoldChange), y=log2FoldChange, fill = Treatment)) +
-  geom_bar(stat='identity', show.legend = FALSE) + geom_text(aes(x=rownames(sigtab.but.D21.cec_cont_RNA), y=0, label = name), size=3)+
-  scale_fill_brewer(palette="Dark2") + theme(axis.text.x=element_text(color = 'black', size = 12),
-                                             axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
-                                             axis.title.x=element_text(size = 10),
-                                             axis.title.y=element_blank())+ ggtitle('Cecal contents (RNA)')+ coord_flip()
+  geom_bar(stat='identity', show.legend = FALSE) +
+  geom_text_sciname(aes(x=rownames(sigtab.but.D21.cec_cont_RNA), y=0, sci = ital2, nonsci=paste(nonital, PID, sep = ' '), important=imp), size=3)+
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) +
+  theme(axis.text.x=element_text(color = 'black', size = 12),
+        axis.text.y=element_text(color = 'black', size=12, face = 'italic'),
+        axis.title.x=element_text(size = 10),
+        axis.title.y=element_blank())+ ggtitle('Cecal contents (RNA)')+ coord_flip()
 p.but.deseq.D21.cec_cont_RNA
 
-############ tryig D0 vs rest for but ###########
 
-FS2.D21.wean.but <- subset_samples(FS2, tissue == 'feces')
-FS2.D21.wean.but@sam_data$wean <- ifelse(FS2.D21.wean.but@sam_data$day == 0, 'pre-weaning', 'post-weaning')
+#####
 
-FS2.D21.wean.but <- prune_taxa(taxa_sums(FS2.D21.wean.but) > 1, FS2.D21.wean.but)
-FS2.D21.wean.but
-FS2.D21.wean.but.De <- phyloseq_to_deseq2(FS2.D21.wean.but, ~ wean)
-
-
-cts = counts(FS2.D21.wean.but.De)
-geoMeans = apply(cts, 1, function(row) if (all(row == 0)) 0 else exp(mean(log(row[row != 0]))))
-FS2.D21.wean.but.De = estimateSizeFactors(FS2.D21.wean.but.De, geoMeans=geoMeans)
-
-FS2.D21.wean.but.De <- DESeq(FS2.D21.wean.but.De, test = "Wald", fitType = "parametric")
-res.wean.but = results(FS2.D21.wean.but.De, cooksCutoff = FALSE, pAdjustMethod = 'BH')
-otu.sigtab.wean.but = res.wean.but[which(res.wean.but$padj < 0.05), ]
-#otu.sigtab.wean.but = cbind(as(otu.sigtab.wean.but, "data.frame"), as(tax_table(FS2.D21.wean.but)[rownames(otu.sigtab.wean.but), ], "matrix"))
-format(otu.sigtab.wean.but$padj, scientific = TRUE)
-otu.sigtab.wean.but$newp <- format(round(otu.sigtab.wean.but$padj, digits = 3), scientific = TRUE)
-otu.sigtab.wean.but$Treatment <- ifelse(otu.sigtab.wean.but$log2FoldChange >=0, "pre-weaning", "post-weaning")
-otu.sigtab.wean.but$name <- butswap[rownames(otu.sigtab.wean.but)]
-otu.sigtab.wean.but$tissue <- 'wean-feces'
-otu.sigtab.wean.but$otu <- rownames(otu.sigtab.wean.but)
-
-colnames(otu.sigtab.wean.but)
-colnames(sigtab.but.D15)
 
 
 ######### use this for butfigs ######
@@ -1847,12 +1867,12 @@ colnames(sigtab.but.D15)
 dif_ab_but <- rbind(sigtab.but.D12,
                     sigtab.but.D15,
                     sigtab.but.D19,
-                    sigtab.but.D21,
-                    sigtab.but.D21.ileum,
-                    sigtab.but.D21.cecum,
-                    sigtab.but.D21.colon,
-                    sigtab.but.D21.cec_cont_RNA)#,
-#otu.sigtab.wean.but)
+                    sigtab.but.D21[,-c(12:16)],
+                    sigtab.but.D21.ileum[,-c(12:16)],
+                    sigtab.but.D21.cecum[,-c(12:16)],
+                    sigtab.but.D21.colon[,-c(12:16)],
+                    sigtab.but.D21.cec_cont_RNA[,-c(12:16)])
+
 
 write.table(dif_ab_but, './data/dif_ab_but.txt', row.names = TRUE, col.names = TRUE, quote = FALSE, sep='\t')
 
@@ -1881,7 +1901,7 @@ row.names(all.flow) <- all.flow$Sample
 all.flow$treatment[all.flow$pig_num %in% meta$pig_num[meta$treatment == 'control']] <- 'control'
 all.flow$treatment[all.flow$pig_num %in% meta$pig_num[meta$treatment == 'RPS']] <- 'RPS'
 
-#write.table(all.flow, file = 'FS2_all_flow.txt', sep = '\t', row.names = FALSE)
+write.table(all.flow, file = './data/FS2_all_flow.txt', sep = '\t', row.names = FALSE)
 
 #
 
@@ -1894,27 +1914,51 @@ colnames(flow_counts)
 
 rowSums(flow_counts[,-c(1,18,19,20)]) # this tells us the total number of live single cells sorted for each sample.
 
-#rowSums(flow_counts[,-c(1,34,35,36)])
+
 
 flow_counts[,-c(1,18,19,20)] <- flow_counts[,-c(1,18,19,20)] / rowSums(flow_counts[,-c(1,18,19,20)]) # converts to relative abundance
 
 # alpha div  #
 meta.flow <- flow_counts
 
-#flow_counts %>% group_by(tissue)
+
+# This is for CD3 populations supplement #
+
+flowgath <- flow_counts %>% 
+  gather(key = cell_type, value = value, -Sample, -(tissue:treatment)) %>% 
+  group_by(tissue, cell_type) %>% 
+  summarise(av_abund=(sum(value)/n())*100) 
+flowgath$cell_type <- gsub('/', '', flowgath$cell_type)
+CD3supp <- flowgath %>% mutate(av_abund = round(av_abund, 1)) %>%  spread(cell_type, av_abund)
+CD3supp <- as.data.frame(t(CD3supp))
+colnames(CD3supp)
+CD3supp$cell_type <- rownames(CD3supp)
+colnames(CD3supp) <- c('cecum', 'lymph-node', 'PBMC', 'cell type')
+CD3supp <- CD3supp[-1,]
+rownames(CD3supp) <- NULL
+CD3supp <- CD3supp[,c(4,1,2,3)]
+
+write.table(CD3supp, './output/CD3supp.txt', sep = '\t', quote = FALSE, row.names = FALSE)
+#end supplement stuff
+
+### T cell Ecology stuff 
 
 H <- vegan::diversity(flow_counts[,-c(1,18,19,20)])
-J <- H/log(specnumber(flow_counts[,-c(1,18,19,20)]))
+J <- H/log(specnumber(flow_counts[,-c(1,18,19,20)])) # Pielou's J (evenness)
 meta.flow$evenness <- J
 meta.flow$Shannon <- H
 
 # maybe this one for fig 7 as well ##########
+
+meta.flow$tissue[meta.flow$tissue =='cec'] <- 'cecum'
+meta.flow$tissue[meta.flow$tissue =='ln'] <- 'lymph node'
+
 p.flow.even <- ggplot(meta.flow, aes(tissue, evenness, fill = treatment)) +
   geom_boxplot(show.legend = FALSE, outlier.shape = NA) +
-  scale_fill_brewer(palette = 'Dark2') + geom_point(shape=21, size=2, stroke=1, position = position_jitterdodge(jitter.width = .2)) + 
-  annotate(x=.8, y=.68, xend=1.1, yend=.68, geom='segment') + annotate(x=.95, y=.685, label='*p=0.03*', geom = 'text')
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + geom_point(shape=21, size=2, stroke=1, position = position_jitterdodge(jitter.width = .2), show.legend = FALSE) + 
+  annotate(x=.8, y=.68, xend=1.1, yend=.68, geom='segment') + annotate(x=.95, y=.685, label='*p=0.03*', geom = 'text') + theme(axis.text.x = element_text(c('cecum', 'lymph node', 'PBMC')))
 p.flow.even
-wilcox.test(filter(meta.flow, tissue=='cec')$evenness~filter(meta.flow, tissue=='cec')$treatment)
+wilcox.test(filter(meta.flow, tissue=='cecum')$evenness~filter(meta.flow, tissue=='cecum')$treatment)
 
 #ggplot(meta.flow) + geom_boxplot(aes(tissue, Shannon, fill = treatment))
 
@@ -1923,32 +1967,12 @@ wilcox.test(filter(meta.flow, tissue=='cec')$evenness~filter(meta.flow, tissue==
 barflow <- flow_counts
 #barflow$treatment <- c(rep( c("control", "RPS"), each=7))
 rownames(barflow) <- barflow$Sample
-barflow <- barflow[,-1]
-barflow <- barflow %>% gather(attribute, value, -c(pig_num, treatment, tissue))
+#barflow <- barflow[,-1]
+barflow <- barflow %>% gather(attribute, value, -c(Sample, pig_num, treatment, tissue))
 
-barflow$pig_num <- factor(barflow$pig_num)
-#barflow$type[grep("CTL", barflow$attribute)] <- 'CTL'
-#barflow$type[grep("TH", barflow$attribute)] <- 'TH'
-#barflow$type[grep("DN", barflow$attribute)] <- 'DN'
-#barflow$type[grep("DP", barflow$attribute)] <- 'DP'
+#barflow$pig_num <- factor(barflow$pig_num)
 
-#barflow$FoxP3[grep("FoxP3+", barflow$attribute)] <- TRUE
-#barflow$FoxP3[grep("FoxP3-", barflow$attribute)] <- FALSE
-#barflow$CD25[grep("CD25+", barflow$attribute)] <- TRUE
-#barflow$CD25[grep("CD25-", barflow$attribute)] <- FALSE
-
-#barflow$attribute[order()]
-#CTL <- grep('CTL', barflow$attribute)
-#TH <- grep('TH', barflow$attribute)
-#DP <- grep('DP', barflow$attribute)
-#DN <- grep('DN', barflow$attribute)
-
-#barflow$activation <- gsub('[A-Z]+_(FoxP3[+-]_CD25[+-])', '\\1', barflow$attribute)
-#library(ggmosaic)
-#ggplot(data=subset(x = barflow, tissue == 'cec'))+geom_mosaic(aes(x=product(pig_num), fill=attribute, weight=value), offset = 0.005) + facet_grid(~treatment) +
-#  labs(x="treatment", y= "Proportion of CD3+ cells")+ theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
-#ggplotly()
-#ggplot(data=subset(barflow, tissue == 'cec'), aes(x=pig_num, y=value, fill=attribute)) + geom_bar(stat = 'identity')+ labs(y = 'Proportion of live single cells')
+# some neat stacked bar graphs that didnt make the paper
 
 ggplot(data=barflow, aes(x=pig_num, y=value, fill=attribute)) +
   geom_bar(stat = 'identity') +
@@ -1956,7 +1980,7 @@ ggplot(data=barflow, aes(x=pig_num, y=value, fill=attribute)) +
   facet_grid(~tissue) + geom_segment(x=7.5, y=0, xend=7.5, yend=1)
 
 barflow[barflow$tissue =='PBMC'& barflow$treat == 'RPS',]$value <- barflow[barflow$tissue =='PBMC'& barflow$treat == 'RPS',]$value * 7/6 #B/C missing 1 obs in RPS treat
-barflow$value <- barflow$value/7
+
 ggplot(data=barflow, aes(x=treatment, y=value, fill=attribute)) +
   geom_bar(stat = 'identity') +
   labs(y = 'Proportion of CD3+ cells') +
@@ -1967,9 +1991,6 @@ ggplot(data=barflow, aes(x=treatment, y=value, fill=attribute)) +
 rownames(flow_counts) <- flow_counts$Sample
 
 meta.flow$treatment[meta.flow$treatment == 'control'] <- 'CON'
-meta.flow$tissue[meta.flow$tissue =='cec'] <- 'cecum'
-meta.flow$tissue[meta.flow$tissue =='ln'] <- 'lymph node'
-
 
 rownames(flow_counts) == rownames(meta.flow)
 
@@ -1982,7 +2003,7 @@ flow.nmds[[1]]
 flow.nmds[[2]]
 flow.mds <- flow.nmds[[3]]
 
-stressplot(flow.mds)
+stressplot(flow.mds) # pretty good stressplot here....
 nmds.stress <- flow.nmds[[3]]$stress
 
 
@@ -1991,14 +2012,14 @@ nmds.stress <- flow.nmds[[3]]$stress
 flow.nmds[[2]]$treatment <- gsub('([A-Za-z ]+) ([A-Z]+)', '\\2', flow.nmds[[2]]$group)
 flow.nmds[[2]]$tissue <- gsub('([A-Za-z ]+) ([A-Z]+)', '\\1', flow.nmds[[2]]$group)
 
-colnames(flow.nmds[[1]])[23] <- 'tissue & treatment'
+colnames(flow.nmds[[1]])[23] <- 'type'
 
 
 
 p.floword.all <- ggplot(flow.nmds[[1]], aes(x=MDS1, y = MDS2)) +
   #geom_text_repel(data=spp.scrs, aes(MDS1, MDS2, label = cell_type), size=3, alpha=.7)+
   #geom_segment(data = spp.scrs, aes(x=0, xend=spp.scrs$MDS1, y=0, yend=spp.scrs$MDS2), alpha=.5)+
-  geom_point(data=flow.nmds[[1]], aes(color=`tissue & treatment` ), size=3) +
+  geom_point(data=flow.nmds[[1]], aes(color=type ), size=3) +
   geom_path(data = flow.nmds[[2]], aes(x=NMDS1, y=NMDS2, color=group), size=1.25) +
   #ggtitle('Cecal T-cell community similarity: NMDS ordination using Bray-Curtis distances', subtitle = 'Treatments separated within Tissues') +
   geom_segment(data = flow.nmds[[1]],
@@ -2006,12 +2027,12 @@ p.floword.all <- ggplot(flow.nmds[[1]], aes(x=MDS1, y = MDS2)) +
                    xend=flow.nmds[[1]]$centroidX,
                    y=flow.nmds[[1]]$MDS2,
                    yend=flow.nmds[[1]]$centroidY,
-                   color=`tissue & treatment` ),size=1) + scale_color_brewer(palette="Dark2") + theme(legend.title = element_text('tissue and treatment'))
+                   color=type ),size=1) + scale_color_brewer(palette="Dark2")
 
 
 p.floword.all
 
-###############3 this is now messed up because I took columns away from flow_counts ############
+
 #  boxplots  #
 
 fin <- data.frame()
@@ -2048,7 +2069,7 @@ for (lev in levels(barflowtoo$tisXatt)){
 }
 
 
-fin$pvalue2 <- round(fin$pvalue, 4)
+fin$pvalue2 <- round(fin$pvalue, 3)
 fin$pvalue2 <- factor(paste('wilcox pvalue = ', fin$pvalue2, sep = ''))
 
 
@@ -2057,7 +2078,7 @@ fin$value <- fin$value * 100
 # just the significantly different populations in all tissues
 p.flow.allsig <- filter(fin, pvalue < 0.05) %>% ggplot(aes(x=treatment, y=value, fill=treatment))+geom_boxplot()+
   geom_jitter(shape=21, aes(fill=treatment), size =2, stroke=.75, width = .1)+
-  facet_wrap(~tisXatt+pvalue2, scales = 'free')+ scale_fill_brewer(palette="Dark2")+
+  facet_wrap(~tisXatt+pvalue2, scales = 'free')+ scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS'))+
   labs(x="treatment", y= "Percent Live Single cells") + theme(strip.text = element_text(size = 9))
 
 
@@ -2068,11 +2089,11 @@ fin$attribute <- gsub('/', ' ', fin$attribute)
 
 p.flow.cecsig <- filter(fin, pvalue < 0.1 & tissue == 'cec') %>% ggplot(aes(x=treatment, y=value, fill=treatment))+geom_boxplot(outlier.shape = NA, position = position_dodge2(preserve = 'total'))+
   geom_jitter(shape=21, aes(fill=treatment), size =2, stroke=1, width = .2)+
-  facet_wrap(~attribute+pvalue2, scales = 'free')+ scale_fill_brewer(palette="Dark2")+
+  facet_wrap(~attribute+pvalue2, scales = 'free')+ scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS'))+
   labs(x="treatment", y= "Percent CD3+ cells") + theme(strip.text = element_text(size = 9, family ='bold')) + 
   ggtitle('Differentially abundant T-cell types in cecal tissues')
 
-#### THIS ONE ###
+# THIS ONE ###
 p.flow.cecsig
 
 
@@ -2102,8 +2123,9 @@ vfas <- vfas[,match(colnames(vfas2), colnames(vfas))]
 colnames(vfas) == colnames(vfas2)
 
 vfas.final <- rbind(vfas, vfas2)
-vfas.cec <- vfas.final %>% filter(tissue=='cecum') %>% select(c(4:20)) %>% group_by(pig_num) %>% summarise_each(funs(mean))
+vfas.cec <- vfas.final %>% filter(tissue=='cecum') %>% select(c(4:20)) %>% group_by(pig_num) %>% summarise_all(funs(mean))
 vfas.cec$tissue <- 'cecum'
+vfas.cec[,17]
 vfas.cec <- vfas.cec[,-17]
 colnames(vfa.fec)[8] <- 'lactate'
 
@@ -2126,17 +2148,17 @@ vfas.melt[vfas.melt$tissue == 'feces',]$value <- vfas.melt[vfas.melt$tissue == '
 #vfas.melt %>% filter(tissue == 'portal') %>% ggplot(aes(x=treatment, y=value, group=treatment)) + geom_boxplot() + facet_wrap(~variable, scales = 'free')
 #vfas.melt %>% filter(tissue == 'cecum') %>% ggplot(aes(x=treatment, y=value, group=treatment)) + geom_boxplot() + facet_wrap(~variable, scales = 'free')
 
-vfas.melt %>% filter(pig_num %in% c(67:73, 74:80)) %>% filter(variable %in% c('propionate', 'butyrate', 'lactate','valerate', 'caproate', 'total') & tissue != 'portal') %>%
+vfas.melt %>% filter(variable %in% c('propionate', 'butyrate', 'lactate','valerate', 'caproate', 'total') & tissue != 'portal') %>%
   ggplot(aes(x=tissue, y=value, group=design, fill=treatment)) +
-  geom_boxplot(outlier.shape = NA) + facet_wrap(~variable, scales = 'free', nrow = 2, ncol = 3) + geom_point(shape=21, size=2, stroke=1, position = position_jitterdodge(jitter.width = .2)) + 
-  scale_fill_brewer(palette = 'Dark2') + ylab('Concentration (mM)') + ggtitle('Cecal and fecal SCFA concentrations')
+  geom_boxplot(position = position_dodge2(preserve = 'total'),outlier.shape = NA) + facet_wrap(~variable, scales = 'free', nrow = 2, ncol = 3) + geom_point(shape=21, size=2, stroke=1, position = position_jitterdodge(jitter.width = .2)) + 
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ylab('Concentration (mM)') + ggtitle('Cecal and fecal SCFA concentrations')
 
 
 
 p.vfas.final <- vfas.melt %>% filter(variable %in% c('propionate', 'butyrate', 'lactate','valerate', 'caproate', 'total') & tissue != 'portal') %>%
   ggplot(aes(x=tissue, y=value, group=design, fill=treatment)) +
-  geom_boxplot(outlier.shape = NA) + facet_wrap(~variable, scales = 'free', nrow = 2, ncol = 3) + geom_point(shape=21, size=2, stroke=1, position = position_jitterdodge(jitter.width = .2)) + 
-  scale_fill_brewer(palette = 'Dark2') + ylab('Concentration (mM)') + ggtitle('Cecal and fecal SCFA concentrations')
+  geom_boxplot(position = position_dodge2(preserve = 'total'),outlier.shape = NA) + facet_wrap(~variable, scales = 'free', nrow = 2, ncol = 3) + geom_point(shape=21, size=2, stroke=1, position = position_jitterdodge(jitter.width = .2)) + 
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ylab('Concentration (mM)') + ggtitle('Cecal and fecal SCFA concentrations')
 
 
 
@@ -2170,7 +2192,7 @@ vfas.WC$pvalue2 <- factor(paste('wilcox pvalue = ', vfas.WC$pvalue2, sep = ''))
 # All
 p.vfas.allsig <- filter(vfas.WC, pvalue < 1) %>% ggplot(aes(x=treatment, y=value, fill=treatment))+geom_boxplot()+
   geom_jitter(shape=21, aes(fill=treatment), size =2, stroke=.75, width = .1)+
-  facet_wrap(~tisXatt+pvalue2, scales = 'free')+ scale_fill_brewer(palette="Dark2")+
+  facet_wrap(~tisXatt+pvalue2, scales = 'free')+ scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS'))+
   labs(x="treatment", y= "Percent Live Single cells") + theme(strip.text = element_text(size = 9))
 
 
@@ -2179,21 +2201,23 @@ p.vfas.allsig
 
 # just the (almost) significantly different populations only in the cecum
 
-p.vfas.cecsig <- filter(vfas.WC, pvalue < 0.1 & tissue == 'cecum') %>% ggplot(aes(x=treatment, y=value, fill=treatment))+geom_boxplot()+
-  geom_jitter(shape=21, aes(fill=treatment), size =2, stroke=.75, width = .1)+ geom_text(aes(label = pig_num))+
-  facet_wrap(~tisXatt+pvalue2, scales = 'free')+ scale_fill_brewer(palette="Dark2")+
-  labs(x="treatment", y= "Percent Live Single cells") + theme(strip.text = element_text(size = 9))
+# p.vfas.cecsig <- filter(vfas.WC, pvalue < 0.1 & tissue == 'cecum') %>% ggplot(aes(x=treatment, y=value, fill=treatment))+geom_boxplot()+
+#   geom_jitter(shape=21, aes(fill=treatment), size =2, stroke=.75, width = .1)+ geom_text(aes(label = pig_num))+
+#   facet_wrap(~tisXatt+pvalue2, scales = 'free')+ scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS'))+
+#   labs(x="treatment", y= "Percent Live Single cells") + theme(strip.text = element_text(size = 9))
+# 
 
-
-p.vfas.cecsig
+# p.vfas.cecsig
 
 ############### BUTNET ###############
 
 # but taxonomy #
 
+# column names for the blast results
 xx <- "qacc sacc sallseqid staxids sblastnames salltitles evalue qstart qend sstart send sscinames pident length"
 xx <- unlist(strsplit(xx, split = ' '))
 
+# reading in blast results
 blast <- read.table('./data/butreps_blastx2.txt', header = FALSE, sep = '\t', stringsAsFactors = FALSE)
 shared2 <- read.table('./data/but2.shared', header = TRUE, stringsAsFactors = FALSE)
 
@@ -2219,7 +2243,7 @@ names(butswip) <- blast$lab
 butswap <- names(butswip)
 names(butswap) <- butswip
 
-butswap[blast$otu]
+butswap[blast$otu]  # this allows me to swap out the OTU names with a more informative name, kinda like a python dict
 
 
 # Read in data #
@@ -2238,35 +2262,22 @@ rownames(otu) <- meta$sample
 
 
 
-#dif_ab_16S <- read.table('dif_ab_16s.txt', header = TRUE, sep = '\t', stringsAsFactors = FALSE)
-#dif_ab_but <- read.table('dif_ab_but.txt', header = TRUE, sep = '\t', stringsAsFactors = FALSE)
-################### HERE IS ENRICH ##################
-####################  ###################
-############################## ########################
-####################### ###################################
+dif_ab_16S <- read.table('./data/dif_ab_16s.txt', header = TRUE, sep = '\t', stringsAsFactors = FALSE)
+dif_ab_but <- read.table('./data/dif_ab_but.txt', header = TRUE, sep = '\t', stringsAsFactors = FALSE)
+
+# HERE IS ENRICH 
 
 dif_ab_16S$node <- swap[dif_ab_16S$otu]
 dif_ab_but$node <- butswap[dif_ab_but$otu]
 
-
-#coln
-
+# limiting the differential abundance dataframes to only have the same columns
 dif_ab_16S <- dif_ab_16S[,which(colnames(dif_ab_16S) %in% colnames(dif_ab_but))]
 dif_ab_but <- dif_ab_but[,which(colnames(dif_ab_but) %in% colnames(dif_ab_16S))]
-enrich <- rbind(dif_ab_16S, dif_ab_but)
-#colnames(dif_ab_but[,c(7,8,9,10,11,12)]) %in% colnames(dif_ab_16S)
+
+enrich <- rbind(dif_ab_16S, dif_ab_but) # This data frame has all the enrichment data in it
 
 
-#colnames(enrich)[3] <- 'node'
 enrich$node
-
-#enrich[enrich$tissue != 'D15_feces',]
-#enrich <- data.frame(enrich)
-#enrich <- enrich[!(enrich$Treatment %in% c('post-weaning', 'pre-weaning')),]
-
-#enrich$Treatment
-# colnames(dif_ab_16S)
-# colnames(dif_ab_but)
 
 # but data #
 
@@ -2281,20 +2292,26 @@ rownames(but) <- butmeta$sample
 # getting everything in order #
 # Only feces used in this correlation
 
+meta$tissue
+
+# excluding day 0
 meta <- meta %>% filter(tissue == 'feces' & day != 0)
 butmeta <- butmeta %>% filter(tissue == 'feces' & day != 0)
+
+
+
 meta <- filter(meta, sample %in% butmeta$sample)
 meta <- meta[match(butmeta$sample, meta$sample),]
 
 otu <- otu[otu$group %in% meta$group,]
 otu <- otu[match(meta$group, otu$group),]
-#otu <- na.omit(otu)
 
 otu <- otu[,which(names(otu) != 'group')]
 but <- but[,which(names(but) != 'group')]
 
+
 sort(rowSums(otu))
-otu <- otu[rowSums(otu)>1000,]
+otu <- otu[rowSums(otu)>1000,] # throwing out samples with fewer than 1000 reads
 meta <- meta[which(meta$sample %in% rownames(otu)),]
 butmeta <- butmeta[which(butmeta$sample %in% meta$sample),]
 butmeta$sample == meta$sample
@@ -2304,6 +2321,10 @@ but <- but[which(rownames(but) %in% butmeta$sample),]
 rownames(but) == butmeta$sample
 rowSums(but)
 
+rowSums(otu)
+
+otu <- otu[,colMeans(otu) > 0]
+but <- but[,colMeans(but) > 0]
 # sqrt transformation, comment out to revert to relative abundance.  I think the sqrt transform
 # is appropriate here, It is common throughout ecology and it serves to correct the well established
 # amplification bias seen in amplicon based sequencing projects
@@ -2311,9 +2332,6 @@ rowSums(but)
 # poorly so their abundance is underestimated.  A sqrt transformation helps correct this by reducing the  relative abundance
 # of highly abundant features and increasing the relative abundance of less abundant features, yet the ranks of abundances are unaffected.
 # It probably doesnt make a difference.
-
-#but <- wisconsin(but)
-#otu <- wisconsin(otu)
 
 but <- sqrt(but)
 otu <- sqrt(otu)
@@ -2324,37 +2342,35 @@ but <- but/rowSums(but)
 rowSums(but)
 rowSums(otu)
 
-#otu <- otu[,((colSums(otu)/length(otu[,1]))*100) >0.001] # removes 16S otus with less than 0.01% average abundance
-#but <- but[,((colSums(but)/length(otu[,1]))*100) >0.001] # removes but otus with less than 0.01% average abundance
-
 colnames(otu) <- swap[colnames(otu)] # renaming OTUs with some taxonomic info here
 colnames(but) <- butswap[colnames(but)]
 
 rownames(but) == rownames(otu)
 
-# fecals only #
-but_16S.all <- ccrepe(but, otu, verbose = FALSE, min.subj = 7)
-but.all <- ccrepe(but, verbose = FALSE, min.subj = 7)
-otu.all <-  ccrepe(otu, verbose = FALSE, min.subj = 7)
+#### THIS WILL TAKE A WHILE ####
 
+but_16S.all <- ccrepe(but, otu, verbose = FALSE, min.subj = 5)
+but.all <- ccrepe(but, verbose = FALSE, min.subj = 5)
+otu.all <-  ccrepe(otu, verbose = FALSE, min.subj = 5)
 
-
-but_16S.all.sigs <- ccrepe_to_geomnet(but_16S.all)
-but.all.sigs <- ccrepe_to_geomnet(but.all)
-otu.all.sigs <- ccrepe_to_geomnet(otu.all, pcut = 0.01)
+but_16S.all.sigs <- ccrepe_to_geomnet(but_16S.all, pcut=0.05, spearcut = 0.6)
+but.all.sigs <- ccrepe_to_geomnet(but.all, pcut = 0.05, spearcut = 0.6)
+otu.all.sigs <- ccrepe_to_geomnet(otu.all, pcut = 0.01, spearcut = 0.6)
 
 nodes <- rbind(gather_nodes(otu, '16S'),
                gather_nodes(but, 'but'))
-enrich
-enrich$node
-colnames(enrich)[11] <- 'node'
 
-#enrich <- enrich[!(enrich$tissue %in% c('ileum', 'cecum', 'cec_cont_RNA', 'colon')),]
+
+######## THIS IS WHERE ENRICH IS LIMITED ##############
+
+enrich <- enrich[enrich$tissue %in% c('D21_feces', 'D19_feces', 'D15_feces', 'D12_feces'),]   
+
+enrich$node
+
 
 # this limits the butnet to only features that are diffabund
 
 but_16S.all.sigs <- but_16S.all.sigs[but_16S.all.sigs$from %in% enrich$node & but_16S.all.sigs$to %in% enrich$node,] # one of the nodes in a but-otu connection must be diff abund between the two groups
-
 but.all.sigs <- but.all.sigs[but.all.sigs$from %in% enrich$node & but.all.sigs$to %in% enrich$node,] # but-but connections must both be diff abund
 otu.all.sigs <- otu.all.sigs[otu.all.sigs$from %in% enrich$node & otu.all.sigs$to %in% enrich$node,] # otu-otu connections must both be diff abund
 
@@ -2362,20 +2378,11 @@ all <- rbind(but.all.sigs, but_16S.all.sigs, otu.all.sigs)
 
 all <- fortify(as.edgedf(all), nodes)
 
-
-
-
-
-
-
-
+# removing small subclusters....
 
 filtered4 <- prune_graph(fortified.edgelist = all, node.dataframe = nodes, min.vert = 4)
-filtered5 <- prune_graph(fortified.edgelist = all, node.dataframe = nodes, min.vert = 5)
-filtered6 <- prune_graph(fortified.edgelist = all, node.dataframe = nodes, min.vert = 6)
 
-?prune_graph()
-p.butnet1 <- ggplot(filtered5, aes(from_id = from_id, to_id = to_id, label=from, color=type)) +
+p.butnet1 <- ggplot(filtered4, aes(from_id = from_id, to_id = to_id, label=from, color=type)) +
   geom_net(layout.alg = 'fruchtermanreingold', #layout.par = list(c('cell.pointpointrad', 30), c('niter', 1000)),
            aes(color = type, label = from_id),
            linewidth = 0.5, size = 5, vjust = 0, alpha = 0.3,
@@ -2387,7 +2394,7 @@ p.butnet1
 
 
 
-#enrich$from2 <- swap[enrich$otu]
+
 net <- as.data.frame(ggplot_build(p.butnet1)$data)
 
 #colnames(dif_ab_16S[,c(13,14,15,16,17)])
@@ -2396,12 +2403,10 @@ net <- as.data.frame(ggplot_build(p.butnet1)$data)
 #colnames(enrich)[5] <- 'otu'
 colnames(enrich)[11] <- 'from'
 
-enrich.feces <- enrich[!(enrich$tissue %in% c('ileum', 'cecum', 'cec_cont_RNA', 'colon')),]
-# 
-# enrich$otu 
-#enrich$node
-net$from
+enrich.feces <- enrich
 
+# all these little dataframes are for getting the plot labels and features just right
+# there is probably a way better way of doing this.
 
 net2 <- merge(enrich.feces, net, by = 'from', all = TRUE)
 
@@ -2427,8 +2432,8 @@ net3$type[grep('Otu...$', net3$from)] <- 'but'
 net3$from <- gsub('(.*)\\(.*\\).*','\\1',net3$from)
 net3$from <- gsub('(.*) Otu...', '\\1', net3$from)
 
-net3$nonsci <- c(rep("hey", length(net3$from)))
-net3$imp <- c(TRUE, rep(FALSE, length(net3$from)-1))
+net3 <- net3[!(grepl('Roseburia inulinivorans', net3$from) & grepl('Control', net3$Treatment)),]
+net3 <- net3[!(grepl('Prevotella_7', net3$from) & grepl('Control', net3$Treatment)),]
 
 
 p.butnet.final <- ggplot(net2, aes(x=x, y=y)) +
@@ -2450,15 +2455,15 @@ p.butnet.final <- ggplot(net2, aes(x=x, y=y)) +
   geom_segment(data=net4, aes(x=x, y=y, xend=xend, yend=yend), alpha=0.5) +
   
   geom_point(aes(shape = type, fill = type), size=5) +
-  geom_label_repel(data=net3, aes(label=from, fill=type), size=3, alpha=.7, show.legend = FALSE) +
-  scale_color_brewer(palette = 'Dark2') + scale_shape_manual(values=c(21,24)) +
+  geom_label_repel(data=net3, aes(label=from, fill=type, fontface= 'italic'), size=3, alpha=.7, show.legend = FALSE) +
+  scale_color_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + scale_shape_manual(values=c(21,24)) +
   scale_fill_manual(values=c('grey50','grey80')) + theme(panel.background = element_blank(),
                                                 axis.title = element_blank(),
                                                 axis.text = element_blank(),
                                                 axis.ticks = element_blank())
 p.butnet.final
-library(ggrepel)
-enrich.feces$from == 'Rosburia inulivorans'
+
+
 ############################# Correlation Network ####################
 
 # read in data #
@@ -2472,11 +2477,21 @@ allflow <- allflow[,-c(1,34:36)]
 allflow <- allflow/rowSums(allflow)
 sum((colSums(allflow)/14)*100 >.1) # 21 celltypes with average relative abundance over 0.1%
 
-
-#(colSums(allflow[order(colSums(allflow))])/14)*100
 allflow <- allflow[,(colSums(allflow)/14)*100 >.1] # removes cell types with less than 0.05% abundance (% total live single cells)
 
 flowr <- allflow
+
+colMeans(flowr) *100
+
+flownetsupp <- data.frame(cell_type = names(colMeans(flowr) *100), 
+                          Percent_tot_live = colMeans(flowr) *100)
+
+flownetsupp$cell_type <- gsub('/', '', flownetsupp$cell_type)
+
+rownames(flownetsupp) <- NULL
+
+write.table(flownetsupp, file = './output/Flow_net_supp.txt', sep = '\t')
+
 
 meta <- read.table('./data/V4.metadata.txt', header = TRUE, stringsAsFactors = FALSE)
 meta <- meta[meta$day == 21 & meta$tissue == 'cecum',]
@@ -2491,7 +2506,9 @@ misc$RPS <- ifelse(misc$pig_num %in% control, 0, 1)
 misc$`ng IgA/mg dry contents`
 misc$treatment <- c(rep('control', 7), c(rep('RPS', 7)))
 #IgA fig
-p.IgA <- ggplot(misc, aes(x=treatment, y=`ng IgA/mg dry contents`, fill=treatment)) + geom_boxplot() + geom_jitter(shape=21, size=2, stroke=1, width = .2) +scale_fill_brewer(palette = 'Dark2')
+p.IgA <- ggplot(misc, aes(x=treatment, y=`ng IgA/mg dry contents`, fill=treatment)) +
+  geom_boxplot() + geom_jitter(shape=21, size=2, stroke=1, width = .2) +
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS'))
 
 # qPCR fig
 qPCRrel <- read.table('./data/Cassidy_rel_expr.txt', header = TRUE, stringsAsFactors = FALSE, as.is = TRUE, check.names = FALSE)
@@ -2501,12 +2518,15 @@ qPCRrel$treatment <- c(rep('control', 7), rep('RPS', 7))
 qPCR.m <- melt(qPCRrel)
 qPCR.m$design <- paste(qPCR.m$variable, qPCR.m$treatment)
 
-qPCR.m$variable
+# wilcoxons for the qPCR genes
+qPCR.m %>% group_by(variable) %>% do(W=wilcox.test(value~treatment, data = .data)) %>% summarise(variable, Wilcox=W$p.value)
+
+
 
 p.qPCR.2 <- qPCR.m %>% filter(variable %in% c('DEFB1', 'IL-6', 'MUC2')) %>%
   ggplot(aes(x=variable, y=value, fill=treatment)) + geom_boxplot(outlier.shape = NA, show.legend = FALSE) + 
   geom_point(position=position_jitterdodge(jitter.width = .2), shape=21, size=2, stroke=1, show.legend = FALSE) + 
-  scale_fill_brewer(palette = 'Dark2') + ylab('Relative expression (log2 fold change)') + xlab('gene')
+  scale_fill_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ylab('Relative expression (log2 fold change)') + xlab('gene')
 
 
 qPCR.m <- qPCR.m %>% group_by(design) %>% summarise(mean=mean(value), sd=sd(value), se= sd(value)/sqrt(7)) %>% merge(qPCR.m, by = 'design', all = TRUE)
@@ -2516,21 +2536,19 @@ qPCR.sum$gene <- gsub('(.*) ([A-Za-z]+)', '\\1', qPCR.sum$design)
 
 qPCR.sum$minn <- qPCR.sum$mean- qPCR.sum$se
 qPCR.sum$maxx <- qPCR.sum$mean+ qPCR.sum$se
-qPCR.m$
-qpcr.m %>% filter(gene %in% c('DEFB1', 'IL.6', 'MUC2'))
+
+#qpcr.m %>% filter(gene %in% c('DEFB1', 'IL.6', 'MUC2'))
 
 
-p.qPCR <- filter(qPCR.sum, gene %in% c('DEFB1', 'IL.6', 'MUC2')) %>%
-  ggplot(aes(x=gene, y=mean, group=design, fill=treatment, color=treatment)) +
-  geom_point(size=10, position = position_dodge(.5), show.legend = FALSE)+
-  # stat_summary(fun.y=mean, geom="point", size=5, position = position_dodge(width = .5)) +
-  geom_errorbar(aes(ymin=minn, ymax=maxx), position = position_dodge(.5), width=.2, size=2, show.legend = FALSE) +
-  scale_color_brewer(palette = 'Dark2') + ylab('Relative expression (log2 fold change)') + xlab('gene')
-
-p.qPCR
-
-ggplot_build(p.qPCR)
-
+# p.qPCR <- filter(qPCR.sum, gene %in% c('DEFB1', 'IL-6', 'MUC2')) %>%
+#   ggplot(aes(x=gene, y=mean, group=design, fill=treatment, color=treatment)) +
+#   geom_point(size=10, position = position_dodge(.5), show.legend = FALSE)+
+#   # stat_summary(fun.y=mean, geom="point", size=5, position = position_dodge(width = .5)) +
+#   geom_errorbar(aes(ymin=minn, ymax=maxx), position = position_dodge(.5), width=.2, size=2, show.legend = FALSE) +
+#   scale_color_brewer(palette = "Dark2", labels=c('CON', 'RPS')) + ylab('Relative expression (log2 fold change)') + xlab('gene')
+# 
+# p.qPCR
+# 
 
 ##
 
@@ -2561,9 +2579,20 @@ cecbact <- cecbact[,colSums(cecbact)>.0001] #removes OTUs with less than 0.01% a
 colnames(cecbact) <- swap[colnames(cecbact)]
 
 ########## trying to insert but otus ###########
-
-
-
+# cut this
+# 
+# but <- read.table('./data/but_shared_forcorr.txt', header = TRUE, stringsAsFactors = FALSE)
+# but$group
+# butmeta <- read.table('./data/but_meta_forcorr.txt', header = TRUE, stringsAsFactors = FALSE)
+# but$group == butmeta$group
+# butmeta$sample <- paste(butmeta$tissue, butmeta$day, butmeta$pig_num, sep = '_')
+# rownames(but) <- butmeta$sample
+# 
+# butmeta <- butmeta %>% filter(butmeta$tissue == 'cecum')
+# but <- but %>% filter(rownames(but) %in% butmeta$sample)
+# but <- but %>% select(-group)
+# rownames(but) <- butmeta$pig_num
+# colnames(but) <- butswap[colnames(but)]
 
 # qpcr deltaCTs
 
@@ -2579,12 +2608,15 @@ deltaCT.m <- as.matrix(deltaCT)
 deltaCT.m <- 1/deltaCT.m[,-1]
 
 
+
+##########
+
 vfas
 vfas.m <- as.matrix(filter(vfas, tissue == 'cecum')[,-c(1,7,12,16,17,18,19,20:22)])
 #colnames(vfas)
 flowrm <- as.matrix(flowr)
 cecbactm <- as.matrix(cecbact)
-
+butm <- as.matrix(but)
 #deltaCT.m[,8]
 
 #misc2$mucexpr <- deltaCT.m[,8]
@@ -2595,12 +2627,17 @@ miscm <- miscm[,c(5,9)]
 # Correlation calculations #
 set.seed(37)
 # THIS IS THE ORIGINAL SWITCH BACK IF WEIRD
-TxB <- ccrepe(x = cecbact, y = flowr, min.subj = 7, verbose = FALSE)
-#bac <- ccrepe(x = cecbact, min.subj = 7, verbose = FALSE, compare.within.x = TRUE)
-im <- ccrepe(x = flowr, min.subj = 7, verbose = FALSE)
 
+TxBut <- ccrepe(x=but, y=flowr, min.subj = 5)
+TxB <- ccrepe(x = cecbact, y = flowr, min.subj = 5, verbose = FALSE)
+butx16 <- ccrepe(x=cecbact, y=but, min.subj = 5)
+#bac <- ccrepe(x = cecbact, min.subj = 7, verbose = FALSE, compare.within.x = TRUE)
+im <- ccrepe(x = flowr, min.subj = 5, verbose = FALSE)
+
+
+vfaVSbut <- rcorr(vfas.m, butm)
 vfaVSflow <- rcorr(vfas.m, flowrm)
-#vfaVSbact <- rcorr(vfas.m, cecbactm)
+vfaVSbact <- rcorr(vfas.m, cecbactm)
 qPCRvsFlow <- rcorr(deltaCT.m, flowrm)
 #qPCRvsBac <- rcorr(deltaCT.m, cecbactm)
 miscVSflow <- rcorr(miscm, flowrm)
@@ -2629,16 +2666,26 @@ nodes$type[grep('CD3\\+', nodes$node)] <- 'CD3pos'
 # muci.sigs <- ccrepe_to_geomnet(TxB, spearcut = -0.6, pcut = 1)
 # library(funfuns)
 # muci.sigs[grep('Muci', muci.sigs$to),]
+# 
+# TxBut.sigs <- ccrepe_to_geomnet(TxBut, spearcut = 0.6, pcut = 0.05)
+# butx16.sigs <- ccrepe_to_geomnet(butx16)
 
 TxB.sigs <- ccrepe_to_geomnet(TxB, spearcut = 0.6, pcut = 0.01)
 im.sigs <- ccrepe_to_geomnet(im, spearcut = 0.6, pcut = 0.05)
 
-vf.sig <- rcorr_to_geomnet(vfaVSflow, pcut = 0.015)
-qPCR_flow.sig <- rcorr_to_geomnet(qPCRvsFlow, pcut = 0.05)
+
+#vf.sig <- rcorr_to_geomnet(vfaVSflow, pcut = 0.015)
+
+vf.sig <- rcorr_to_geomnet(vfaVSflow, pcut = 0.05)
+
+qPCR_flow.sig <- rcorr_to_geomnet(qPCRvsFlow, pcut = 0.05, spearcut = 0)
 misc_qPCR.sig <- rcorr_to_geomnet(miscVSqPCR, pcut = 0.05)
 misc_flow.sig <- rcorr_to_geomnet(miscVSflow, pcut = 0.05)
 vfa_misc.sig <- rcorr_to_geomnet(vfaVSmisc, pcut = 0.05)
 vfa_qPCR.sig <- rcorr_to_geomnet(vfaVSqPCR, pcut = 0.05)
+
+# vf_but.sig <- rcorr_to_geomnet(vfaVSbut, pcut=0.05)
+# 
 
 # these below need to be pruned #
 
@@ -2651,6 +2698,8 @@ vfa_qPCR.sig <- rcorr_to_geomnet(vfaVSqPCR, pcut = 0.05)
 # removing stuff from bac.sigs and vf.sigs #
 
 # removes tcell-tcell correlations calculated by rcorr()
+# vf_but.sig <- vf_but.sig[!(grepl('Otu', vf_but.sig$from) & grepl('Otu', vf_but.sig$to)),]
+# vf_but.sig <- vf_but.sig[!(grepl('^[a-z]+$', vf_but.sig$from) & grepl('^[a-z]+', vf_but.sig$to)),]
 
 vf.sig <- vf.sig[!(grepl('CD25', vf.sig$from) & grepl('CD25', vf.sig$to)),]
 misc_flow.sig <- misc_flow.sig[!(grepl('CD25', misc_flow.sig$from) & grepl('CD25', misc_flow.sig$to)),]
@@ -2680,15 +2729,21 @@ all <- rbind(TxB.sigs,
 
 all <- fortify(as.edgedf(all), nodes)
 
-all$from_id
+# all$from_id
 
 
 all$label <- gsub('(.*):Otu[0-9]+', '\\1', all$from_id)
 
 filtered <- prune_graph(fortified.edgelist = all, node.dataframe = nodes, min.vert = 5)
-filtered$type
+# filtered$type
+
+filtered[grep('CD3\\+', filtered$from),]$type <- 'CD3+'
+filtered[grep('CD3-', filtered$from),]$type <- 'CD3-'
+
+
 # Plotting
 
+library(RColorBrewer)
 set.seed(1)
 palette()
 mypal <- colorRampPalette(brewer.pal(8, "Dark2"))(22)
@@ -2708,6 +2763,9 @@ colorRampPalette(brewer.pal(8, "Dark2"))(22)
 mypal <- mypal[c(18,11,6,13,21)]
 #mypal[1] <- 'grey65'
 # 16s, barrier, cd3-, cd3+, vfa
+as.factor(filtered$type)
+
+filtered
 
 p <- ggplot(filtered, aes(from_id = from_id, to_id = to_id, label=from_id, color=type)) +
   geom_net(layout.alg = 'fruchtermanreingold', #layout.par = list(c('cell.pointpointrad', 30), c('niter', 1000)),
@@ -2740,7 +2798,8 @@ CD8 <- newplot[grep('CD8a\\+', newplot$from),]
 
 
 ########### Shiny app stuff #############
-
+# I made a shiny app to help explore this network the stuff that follows here
+# is the data to help build this app
 
 
 # Data for interactive boxplots #
@@ -2779,7 +2838,7 @@ int_data$treatment <- ifelse(int_data$pig %in% FS2.RPS, 'RPS', 'control')
 
 int_data$value <- as.numeric(gsub(' ','',int_data$value))
 
-
+# colnames(int_data[focors,])
 
 highlight_these <-int_data %>% group_by(node) %>%
   do(wilco=wilcox.test(value~treatment, data = ., paired=FALSE)) %>% 
@@ -2794,22 +2853,6 @@ enrigglies <- merge(highlight_these, enrigglies, by='node')
 
 library(RColorBrewer)
 enrigglies$color <- ifelse(enrigglies$enriched_in == 'control', "#1B9E77", "#D95F02")
-
-
-
-# COLOR
-# ORANGE #D95F02
-# GREEN #1B9E77
-
-brewer.pal(8, 'Dark2')
-
-# these dataframes are called during the network plot call
-
-# CD25 <- newplot[grep('CD25\\+', newplot$from),]
-# FoxP3 <- newplot[grep('FoxP3\\+', newplot$from),]
-# CD4 <- newplot[grep('CD4\\+', newplot$from),]
-# CD8 <- newplot[grep('CD8a\\+', newplot$from),]
-
 
 # should be all the data I need for this shiny thing?
 
@@ -2827,9 +2870,8 @@ read.table('enrich.txt', header = TRUE,  sep = '\t')
 
 colnames(enrigglies)[1] <- 'from'
 enrigglies <- merge(newplot, enrigglies, by='from') %>% select(from, color, x, y, enriched_in) %>% unique()
-write.table(enrigglies, file = 'enrich.txt', quote = TRUE, sep = '\t', col.names = TRUE, row.names = FALSE)
+# write.table(enrigglies, file = 'enrich.txt', quote = TRUE, sep = '\t', col.names = TRUE, row.names = FALSE)
 
-enrigglies
 newplot$label <- gsub('CD3./(CD4./CD8a.)/FoxP3./CD25.', '\\1', newplot$label)
 newplot$label <- gsub('(.*):Otu[0-9]+', '\\1', newplot$label)
 labbes <- unique(newplot[,c(1,2,4,5,8,30)])
@@ -2843,16 +2885,28 @@ dif_ab_16S
 # norm: blue, pink, green, yellow, brown
 # 16s, barrier, cd3-, cd3+, vfa
 # 4, 2, 1, 3, 5
-c(4,2,1,3,5)
+# c(4,2,1,3,5)
 #c('grey57', )
 ######## legend needs work ###########
 
+# have to do some wrangling to get the italics just right...
 
-newplot
+newplot$lab22 <- ifelse(grepl('\\([0-9]+\\)',newplot$label), paste("italic('", newplot$label, "')", sep = ''), paste("plain('", newplot$label, "')", sep = ''))
+
+ital_wrang <- data.frame(l1 = sub('(.*)(\\(.*\\))','\\1',newplot[newplot$type == '16S',]$label), 
+           l2 = sub('(.*)(\\(.*\\))','\\2',newplot[newplot$type == '16S',]$label))
+
+ital_wrang$l3 <- paste("italic('", ital_wrang$l1, "')", sep = '')
+ital_wrang$l4 <- paste("plain('", ital_wrang$l2, "')", sep = '')
+ital_wrang$l5 <- paste(ital_wrang$l3, ital_wrang$l4, sep = '~')
+
+newplot[newplot$type == '16S',]$lab22 <- ital_wrang$l5
+
+labbes <- unique(newplot[,c(1,2,4,5,8,30, 31)])
+
 pl <- ggplot(newplot) +
   geom_point(data=enrigglies, aes(x=x, y=y, color=color), size=46, alpha=.1, show.legend = FALSE, inherit.aes = FALSE)+
   geom_point(data=enrigglies, aes(x=x, y=y, color=color), size=44, alpha=.1, show.legend = FALSE, inherit.aes = FALSE)+
-  #geom_point(data=enrigglies, aes(x=x, y=y, color=color), size=32, alpha=.1, show.legend = FALSE, inherit.aes = FALSE)+
   geom_point(data=enrigglies, aes(x=x, y=y, color=color), size=42, alpha=.1, show.legend = FALSE, inherit.aes = FALSE)+
   geom_point(data=enrigglies, aes(x=x, y=y, color=color), size=40, alpha=.1, show.legend = FALSE, inherit.aes = FALSE)+
   geom_point(data=enrigglies, aes(x=x, y=y, color=color), size=38, alpha=.1, show.legend = FALSE, inherit.aes = FALSE)+
@@ -2871,8 +2925,8 @@ pl <- ggplot(newplot) +
   geom_rect(data=CD8, aes(xmin=x-.0013,ymin=y-.03, xmax=x+.0013, ymax=y+.03), fill='black', color='black', show.legend = FALSE)+
   geom_rect(data=CD4, aes(xmin=x-.03,ymin=y-.0013, xmax=x+.03, ymax=y+.0013), fill='gold', color='gold', show.legend = FALSE)+
   geom_point(data=FoxP3, aes(x=x, y=y), color='blue', size=3.5)+
-  geom_label_repel(data=labbes,aes(x=x, y=y, label=label, fill=colour),point.padding = unit(.75, 'lines'), fontface="bold", color='black',
-                   alpha=.75, show.legend=FALSE, size=3, parse = FALSE) + 
+  geom_label_repel(data=labbes,aes(x=x, y=y, label=lab22, fill=colour),point.padding = unit(.75, 'lines'), fontface="bold", color='black',
+                   alpha=.75, show.legend=FALSE, size=3, parse = TRUE) + 
   scale_color_identity()+
   scale_fill_identity()+
   
@@ -2899,6 +2953,8 @@ pl <- ggplot(newplot) +
 
 pl
 
+pl + annotate(geom='text', x=.05,y=.01, label='Subnetwork A', size=7) + annotate(geom='text', x=.05,y=1, label='Subnetwork B', size=7)
+
 plotdata <- pl$data
 
 # CD3- #966A78
@@ -2910,18 +2966,20 @@ plotdata <- pl$data
 
 
 
-OTU_blast <- data.frame(OTU=sub('.*:(Otu.*)', '\\1', unique(cecact_int$node)),descrip=NA) # these are the OTUs I want blast data for
-
+# OTU_blast <- data.frame(OTU=sub('.*:(Otu.*)', '\\1', unique(cecact_int$node)),descrip=NA) # these are the OTUs I want blast data for
+# was going to add BLAST info for these OTUs but ive run out of time...
 
 
 #
 
 proc.time() - ptm
-#sessionInfo()
-#writeLines(capture.output(sessionInfo()), 'sessionInfo.txt')
-newplot
+sessionInfo()
+writeLines(capture.output(sessionInfo()), 'sessionInfo.txt')
 
-
+# I think there is a memory issue with CCREPE, even after the calculations are done 
+# all 16 G of my laptop's memory is being used.  I even removed some R objects but it is still
+# not available.  I can't call sessionInfo() because of this... grumble...
+#
 
 
 
@@ -2938,118 +2996,76 @@ newplot
 
 
 ############
-install.packages('cowplot')
 library(cowplot)
 
 
-# p.weaning.phyla #1A
-# p.weaning.ord #1B
-# p.nitrophenol.time #1C
+##### fig 1 ######
 
 fig.1 <- ggdraw() +
-  draw_plot(p.weaning.phyla, 0,.5,.5,.5)+
-  draw_plot(p.weaning.ord, .5,.5,.5,.5)+
-  draw_plot(p.nitrophenol.time, 0,0,1,.5) +
-  draw_plot_label(c('A', 'B', 'C'), c(0,.5,0), c(1,1,.5), size=15)
+  draw_plot(p.alladon + xlim(c(0,22)), 0,0,.5,1)+
+  draw_plot(p.16s.disp.time + ylab('distance from group mean'), .5,0,.5,1)+
+  draw_plot_label(c('A', 'B'), c(0,.5), c(1,1))
 fig.1
 
-######### fig 2 being changed ######
+p.16s.disp.time
 
-# fig.2 <- p.alladon
-# fig.2
-# fig.2 <- ggdraw() +
-#   draw_plot(p.alladon, 0,.65,.5,.35)+
-#   draw_plot(p.16s.disp.time, .5,.65,.5,.35)+
-#   draw_plot(p.tissord, 0,0,.5,.65)+
-#   draw_plot(p.but.tiss.ord, .5,0,.5,.65) +
-#   draw_plot_label(c('A', 'B', 'C', 'D'), c(0,.5,0,.5), c(1,1,.65,.65))
-# fig.2
+p.alladon + xlim(c(0,22))
+p.16s.disp.time + ylab('distance from group mean')
 
-# NEW FIG 2 #
+##### Fig 2 #####
 
 fig.2 <- ggdraw() +
-  draw_plot(p.alladon, 0,0,.5,1)+
-  draw_plot(p.16s.disp.time, .5,0,.5,1)+
-  draw_plot_label(c('A', 'B'), c(0,.5), c(1,1))
-fig.2
-
-p.16s.disp.time
-
-p.alladon
-p.16s.disp.time
-#p.16s.ord.time
-#p.but.time.ord
-##
-
-##### New Fig 3 #####
-
-fig.3 <- ggdraw() +
   draw_plot(p.tissord, 0,0,.3,1)+
   draw_plot(p.but.tiss.ord, .3,0,.3,1)+
   draw_plot(p.vfas.final, .6,0,.4,1)+
   draw_plot_label(c('A', 'B','C'), c(0,.3,.6), c(1,1,1))
-fig.3
+fig.2
 
 p.tissord
 p.but.tiss.ord
 
-#p.butfecal.dispersionAVG
 
-
-# p.otu87.tiss
-# p.otu87.fec
-# plot_grid(p.otu87.fec, p.otu87.tiss, labels = c("A", "B"), nrow = 1)
-
-# fig 7
-
-# p.flow.even
-# p.floword.all
-# p.flow.cecsig
-#
-#
-# p.IgA
-# p.qPCR
 library(cowplot)
-############ for some reason I have to go back and regenerate these ggplot objects before this will work....
-fig.5 <- ggdraw() +
+### fig 3 ###
+fig.3 <- ggdraw() +
   draw_plot(p.deseq.ileum,0,.75,.45,.25)+
   draw_plot(p.deseq.cecum, 0,.24,.45,.51)+
   draw_plot(p.deseq.colon, 0,0,.45,.24)+
   draw_plot(p.deseq.D21.feces, .45,0,.55,1) +
   draw_plot_label(y=c(1,.75, .24,1), x=c(0,0,0,.45), c('A', 'B', 'C', 'D'))
 
-fig.5
+fig.3
 
 ##
 
-fig.6 <- ggdraw() +
+fig.4 <- ggdraw() +
   draw_plot(p.otu87.fec, 0,0,.3,1)+
   draw_plot(p.otu87.tiss, .3,0,.7,1)+
   draw_plot_label(c('A', 'B'), c(0,.3), c(1,1), size=15)
 
-fig.6
+fig.4
 
 ######## butfig
 
 fig.7 <- ggdraw() +
-  draw_plot(p.flow.even, 0,0,.3,.5)+
-  draw_plot(p.flow.cecsig,.3, 0,.7,.5 )+
+  draw_plot(p.flow.even, 0,0,.35,.5)+
+  draw_plot(p.flow.cecsig,.35, 0,.65,.5 )+
   draw_plot(p.floword.all, 0,.5, 1,.5) +
   draw_plot_label(c('A', 'B', 'C'), c(0,0,.3), c(1,.5,.5), size = 15)
 
 fig.7
 
 #fig.1
-
-##
-library(cowplot)
-fig.8 <- ggdraw() +
+fig.5 <- ggdraw() +
   draw_plot(p.but.deseq.D21.ileum,0,.75,.45,.25)+
   draw_plot(p.but.deseq.D21.cecum, 0,.39,.45,.36)+
   draw_plot(p.but.deseq.D21.cec_cont_RNA, 0,0,.45,.39)+
   draw_plot(p.but.deseq.D21, .45,0,.55,1) +
   draw_plot_label(y=c(1,.75, .39,1), x=c(0,0,0,.45), c('A', 'B', 'C', 'D'))
-fig.8
+fig.5
+fig.7
+
+
 
 #
 fig.9 <- ggdraw()+
@@ -3061,3 +3077,4 @@ fig.9
 #
 
 
+sessionInfo()
